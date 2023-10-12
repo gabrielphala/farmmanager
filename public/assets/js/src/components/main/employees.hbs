@@ -1,0 +1,59 @@
+{{~scope 'employees'}}
+
+{{~fetch '/users/get/department-employees/by/farm' | as 'res' }}
+
+<div class="container__main__center">
+    <h4 class="container__main__center__title">Employees</h4>
+
+    <div class="card table">
+        <div class="table__header">
+            <ul class="table__header__row flex">
+                <li class="table__header__row__item short">#</li>
+                <li class="table__header__row__item">Full name</li>
+                <li class="table__header__row__item">Email address</li>
+
+                {{#same userDetails.role 'Project manager'}}
+                    <li class="table__body__row__item">Department</li>
+                {{/same}}
+
+                <li class="table__header__row__item">Added on</li>
+
+                {{#same userDetails.role 'Department manager'}}
+                    <li class="table__header__row__item">...</li>
+                {{/same}}
+            </ul>
+        </div>
+        <div class="table__body">
+            {{#each res.employees}}
+                <ul class="table__body__row flex">
+                    <li class="table__body__row__item short">{{index}}</li>
+                    <li class="table__body__row__item">{{this.fullname}}</li>
+                    <li class="table__body__row__item">{{this.email}}</li>
+
+                    {{#same userDetails.role 'Project manager'}}
+                        <li class="table__body__row__item">{{this.department}}</li>
+                    {{/same}}
+
+                    <li class="table__body__row__item">{{datetime this.createdOn}}</li>
+                
+                    {{#same userDetails.role 'Department manager'}}
+                        <li class="table__body__row__item">
+                            <span {{click "User.removeDepartmentEmployee('<<this.id>>')"}}>Remove</span>
+                        </li>
+                    {{/same}}
+                </ul>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#same userDetails.role 'Department manager'}}
+        <p class="margin--top-2 flex" {{click "Util.openModal('new-department-employee')"}}>
+            <svg class="image--icon margin--right-1">
+                <use href="#add"></use>
+            </svg>
+            <span>Add department employee</span>
+        </p>
+    {{/same}}
+
+    {{component 'modals/department-employee'}}
+</div>

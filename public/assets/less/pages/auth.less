@@ -1,0 +1,86 @@
+.auth{
+    &__main{
+        justify-content: center;
+        margin-top: 11rem;
+        
+        &__background{
+            flex: 0 0 35rem;
+            margin-left: 5rem;
+
+            img {
+                width: 35rem;
+            }
+        }
+
+        &__form{
+            flex: 0 0 40rem;
+            align-self: center;
+
+            &__logo{
+                margin-bottom: 3rem;
+
+                img{
+                    width: 3rem;
+                    margin-right: 1rem;
+                }
+
+                h4{
+                    letter-spacing: 5px;
+
+                    span{
+                        font-weight: 100;
+                    }
+                }
+            }
+
+            &__account-selection{
+                background-color: #eee;
+                margin-bottom: 1rem;
+                border-radius: 4px;
+                overflow: hidden;
+
+                label{
+                    display: inline-block;
+                    padding: 1rem .7rem;
+                    cursor: pointer;
+                }
+
+                &__active{
+                    background-color: #c2bff3;
+                    color: darken(#6C63FF, 10%);
+                }
+            }
+
+            &__body{
+                &__title {
+                    margin-bottom: 3rem;
+            
+                    p {
+                        color: #bababa;
+                    }
+                }
+
+                margin-bottom: 3rem;
+
+                .input{
+                    &:not(:first-child){
+                        margin-top: 1.4rem;
+                    }
+
+                    input::placeholder{
+                        color: #a5a5a5;
+                    }
+                }
+
+                button{
+                    margin-top: 3rem;
+                    padding: 1rem;
+                }
+            }
+
+            &__footer{
+                color: #a5a5a5;
+            }
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{{~scope 'department.managers'}}
+
+{{~fetch '/users/get/department-managers/by/farm' | as 'res' }}
+
+<div class="container__main__center">
+    <h4 class="container__main__center__title">Department Managers</h4>
+
+    <div class="card table">
+        <div class="table__header">
+            <ul class="table__header__row flex">
+                <li class="table__header__row__item short">#</li>
+                <li class="table__header__row__item">Full name</li>
+                <li class="table__header__row__item">Email address</li>
+                <li class="table__header__row__item">Department</li>
+                <li class="table__header__row__item">Added on</li>
+
+                {{#same userDetails.role 'Project manager'}}
+                    <li class="table__header__row__item">...</li>
+                {{/same}}
+            </ul>
+        </div>
+        <div class="table__body">
+            {{#each res.managers}}
+                <ul class="table__body__row flex">
+                    <li class="table__body__row__item short">{{index}}</li>
+                    <li class="table__body__row__item">{{this.fullname}}</li>
+                    <li class="table__body__row__item">{{this.email}}</li>
+                    <li class="table__body__row__item">{{this.department}}</li>
+                    <li class="table__body__row__item">{{datetime this.createdOn}}</li>
+                
+                    {{#same userDetails.role 'Project manager'}}
+                        <li class="table__body__row__item">
+                            <span {{click "User.removeDepartmentManager('<<this.id>>', '<<this.department>>')"}}>Remove</span>
+                        </li>
+                    {{/same}}
+                </ul>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#same userDetails.role 'Project manager'}}
+        <p class="margin--top-2 flex" {{click "Util.openModal('new-department-manager')"}}>
+            <svg class="image--icon margin--right-1">
+                <use href="#add"></use>
+            </svg>
+            <span>Add department manager</span>
+        </p>
+    {{/same}}
+
+    {{component 'modals/department-manager'}}
+</div>

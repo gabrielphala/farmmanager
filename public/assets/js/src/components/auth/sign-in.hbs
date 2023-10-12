@@ -1,0 +1,60 @@
+{{~ scope 'sign.in' }}
+
+<div class="auth__main flex">
+    <form class="auth__main__form" {{submit "User.signIn(event)"}}>
+        <div class="auth__main__form__logo flex flex--j-center">
+            <img src="/assets/logo/bird.svg">
+            <h4>FARM<span>MANAGER</span></h4>
+        </div>
+
+        <div class="auth__main__form__account-selection flex flex--j-space-between">
+            <div class="auth__main__form__account-selection__active" {{click 'User.selectAccountType(event)'}}>
+                <input type="radio" id="owner-btn" name="account-type" value="Owner" hidden checked="true">
+                <label for="owner-btn">Owner</label>
+            </div>
+            <div {{click 'User.selectAccountType(event)'}}>
+                <input type="radio" id="project-manger-btn" value="Project manager" name="account-type" hidden>
+                <label for="project-manger-btn">Project manger</label>
+            </div>
+            <div {{click 'User.selectAccountType(event)'}}>
+                <input type="radio" id="department-manager-btn" value="Department manager" name="account-type" hidden>
+                <label for="department-manager-btn">Department manager</label>
+            </div>
+            <div {{click 'User.selectAccountType(event)'}}>
+                <input type="radio" id="employee-btn"  value="Employee" name="account-type" hidden>
+                <label for="employee-btn">Employee</label>
+            </div>
+        </div>
+
+        <div class="auth__main__form__body card">
+            <div class="card__body">
+                <div class="auth__main__form__body__title">
+                    <h1>Welcome back</h1>
+                    <p>sign in</p>
+                </div>
+                
+                <div class="error-container hide" id="auth-error">
+                    <p></p>
+                </div>
+                
+                <div class="input">
+                    <input type="email" id="user-email" placeholder="Email address">
+                </div>
+                
+                <div class="input">
+                    <input type="password" id="user-password" placeholder="Password">
+                </div>
+
+                <button class="btn btn--primary">Sign in</button>
+            </div>
+        </div>
+        <div class="auth__main__form__footer flex flex--j-space-around">
+            <p><a href="/sign-up" {{click "Util.nav(event)"}}>Sign up as owner?</a></p>
+            <p>Terms of use</p>
+            <p>Privacy policy</p>
+        </div>
+    </form>
+    <div class="auth__main__background flex flex--j-space-between">
+        <img src="/assets/illustrations/farm_girl.svg" alt="Logo">
+    </div>
+</div>

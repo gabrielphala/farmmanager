@@ -1,0 +1,15 @@
+{{#same userDetails.role 'Owner'}}
+    {{component 'sidenav/project-manager'}}
+{{/same}}
+
+{{#same userDetails.role 'Project manager'}}
+    {{component 'sidenav/project-manager'}}
+{{/same}}
+
+{{#same userDetails.role 'Department manager'}}
+    {{component 'sidenav/department-manager'}}
+{{/same}}
+
+{{#same userDetails.role 'Employee'}}
+    {{component 'sidenav/employee'}}
+{{/same}}

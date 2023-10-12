@@ -1,0 +1,28 @@
+<div class="modal modal--closed flex--a-start flex--j-center" id="new-department-manager-modal">
+    <form class="modal__main card" {{submit "User.addDepartmentManager(event)"}}>
+        <div class="card__header flex flex--a-center flex--j-space-between">
+            <div>
+                <h1>New department manager.</h1>
+                <p>Add a department manager</p>
+            </div>
+            <svg class="image--icon" {{click "Util.closeModal('new-department-manager')"}}>
+                <use href="#cross"></use>
+            </svg>
+        </div>
+        <div class="card__body">
+            <div class="input">
+                <input type="text" id="department-name" placeholder="Department name">
+            </div>
+            <div class="input margin--top-1">
+                <input type="text" id="user-full-name" placeholder="Full name">
+            </div>
+            <div class="input margin--top-1">
+                <input type="email" id="user-email" placeholder="Email address">
+            </div>
+        </div>
+        <div class="card__footer">
+            <button class="btn btn--primary">Add department manager</button>
+            <button type="button" class="btn" {{click "Util.closeModal('new-department-manager')"}}>Cancel</button>
+        </div>
+    </form>
+</div>

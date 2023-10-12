@@ -1,0 +1,53 @@
+{{~ scope 'sign.up' }}
+
+<div class="auth__main flex">
+    <form class="auth__main__form" {{submit "User.signUpOwner(event)"}}>
+        <div class="auth__main__form__logo flex flex--j-center">
+            <img src="/assets/logo/bird.svg">
+            <h4>FARM<span>MANAGER</span></h4>
+        </div>
+        
+        <div class="auth__main__form__body card">
+            <div class="card__body">
+                <div class="auth__main__form__body__title">
+                    <h1>Owner </h1>
+                    <p>sign up</p>
+                </div>
+                
+                <div class="error-container hide" id="auth-error">
+                    <p></p>
+                </div>
+                
+                <div class="input">
+                    <input type="text" id="user-farm-name" placeholder="Farm name">
+                </div>
+                
+                <div class="input">
+                    <input type="text" id="user-full-name" placeholder="Full name">
+                </div>
+                
+                <div class="input">
+                    <input type="email" id="user-email" placeholder="Email address">
+                </div>
+                
+                <div class="input">
+                    <input type="password" id="user-password" placeholder="Password">
+                </div>
+                
+                <div class="input">
+                    <input type="password" id="user-password-again" placeholder="Password again">
+                </div>
+                
+                <button class="btn btn--primary">Sign up</button>
+            </div>
+        </div>
+        <div class="auth__main__form__footer flex flex--j-space-around">
+            <p><a href="/sign-in" {{click "Util.nav(event)"}}>Already have an account?</a></p>
+            <p>Terms of use</p>
+            <p>Privacy policy</p>
+        </div>
+    </form>
+    <div class="auth__main__background flex flex--j-space-between">
+        <img src="/assets/illustrations/farm_girl.svg" alt="Logo">
+    </div>
+</div>

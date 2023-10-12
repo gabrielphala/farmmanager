@@ -1,0 +1,24 @@
+.course-slideshow {
+    &__slides {
+        overflow: hidden;
+
+        &__slide {
+            position: relative;
+            flex: 0 0 100%;
+            transition: margin .6s ease-in;
+
+            &__background {
+                height: 40rem;
+                overflow: hidden;
+                filter: brightness(.5);
+            }
+
+            &__caption {
+                position: absolute;
+                left: 3rem;
+                bottom: 3rem;
+                color: #fafafa;
+            }
+        }
+    }
+}

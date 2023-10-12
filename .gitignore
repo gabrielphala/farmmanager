@@ -1,0 +1,8 @@
+node_modules
+public/assets/uploads/profiles/*
+!public/assets/uploads/profiles/blank.jpg
+public/assets/uploads/thumbnails/*
+!public/assets/uploads/thumbnails/default-playlist.jpg
+!public/assets/uploads/thumbnails/default-video.png
+public/assets/uploads/videos/*
+package-lock.json
