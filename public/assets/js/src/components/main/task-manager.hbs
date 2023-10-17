@@ -1,6 +1,52 @@
 {{~scope 'task.manager'}}
+{{~fetch '/task/get/by/farm' | as 'res' }}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Task manager</h4>
 
+    <div class="card table">
+        <div class="table__header">
+            <ul class="table__header__row flex">
+                <li class="table__header__row__item short">#</li>
+                <li class="table__header__row__item">Object</li>
+                <li class="table__header__row__item">Lead (Reporting) Employee</li>
+                <li class="table__header__row__item">Progress</li>
+                <li class="table__header__row__item">Created on</li>
+                
+                {{#same userDetails.role 'Employee'}}
+                    <li class="table__header__row__item">...</li>
+                {{/same}}
+            </ul>
+        </div>
+        <div class="table__body">
+            {{#each res.tasks}}
+                <ul class="table__body__row flex">
+                    <li class="table__body__row__item short">{{index}}</li>
+                    <li class="table__body__row__item">{{this.objective}}</li>
+                    <li class="table__body__row__item">{{this.fullname}}</li>
+                    <li class="table__body__row__item">{{this.progress}}</li>
+                    <li class="table__body__row__item">{{datetime this.createdOn}}</li>
+
+                    {{#same userDetails.fullname this.fullname}}
+                        <li class="table__body__row__item">Mark as completed</li>
+                    {{else}}
+                        {{#same userDetails.role 'Employee'}}
+                            <li class="table__body__row__item">No action</li>
+                        {{/same}}
+                    {{/same}}
+                </ul>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#same userDetails.role 'Department manager'}}
+        <p class="margin--top-2 flex" style="cursor: pointer;" {{click "Util.openModal('new-task')"}}>
+            <svg class="image--icon margin--right-1">
+                <use href="#add"></use>
+            </svg>
+            <span>Add task</span>
+        </p>
+    {{/same}}
+
+    {{component 'modals/task'}}
 </div>

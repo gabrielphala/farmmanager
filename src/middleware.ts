@@ -13,11 +13,10 @@ export const isUserOwnerOrProjectManager = (req: Request, res: Response, next: N
     next();
 }
 
-export const isDepartmentManager = (req: Request, res: Response, next: NextFunction) => {
+export const isDepartmentManagerOrEmployee = (req: Request, res: Response, next: NextFunction) => {
     if (
         (!req['store']) ||
-        (req['store'] && !req['store'].userInfo) ||
-        (req['store'] && req['store'].userInfo && req['store'].userInfo.role != 'Department manager')
+        (req['store'] && !req['store'].userInfo)
     )
         return res.redirect('/sign-in');
 

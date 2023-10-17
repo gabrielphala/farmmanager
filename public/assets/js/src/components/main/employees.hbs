@@ -47,7 +47,7 @@
     </div>
 
     {{#same userDetails.role 'Department manager'}}
-        <p class="margin--top-2 flex" {{click "Util.openModal('new-department-employee')"}}>
+        <p class="margin--top-2 flex" style="cursor: pointer;" {{click "Util.openModal('new-department-employee')"}}>
             <svg class="image--icon margin--right-1">
                 <use href="#add"></use>
             </svg>

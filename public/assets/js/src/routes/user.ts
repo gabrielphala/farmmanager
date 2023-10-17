@@ -24,4 +24,10 @@ export default (): void => {
         url: '/task-manager',
         layoutpath: 'info'
     })
+
+    Route({
+        name: 'announcements',
+        url: '/announcements',
+        layoutpath: 'info'
+    })
 }

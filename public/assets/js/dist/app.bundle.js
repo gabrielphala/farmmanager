@@ -33,6 +33,80 @@ const middleware_1 = __importDefault(__webpack_require__(/*! ./middleware */ "./
 
 /***/ }),
 
+/***/ "./public/assets/js/src/events/Announcement.ts":
+/*!*****************************************************!*\
+  !*** ./public/assets/js/src/events/Announcement.ts ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
+const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
+const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
+const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
+exports["default"] = () => new (class Announcement {
+    constructor() {
+        new oddlyjs_1.Events(this);
+    }
+    async send(e) {
+        e.preventDefault();
+        const response = await (0, fetch_1.default)('/announcement/add', {
+            body: {
+                subject: $('#announcement-subject').val(),
+                message: $('#announcement-message').val(),
+            }
+        });
+        if (response.successful) {
+            (0, modal_1.closeModal)('new-announcement');
+            return (0, oddlyjs_1.Refresh)();
+        }
+        (0, error_container_1.showError)('announce', response.error);
+    }
+});
+
+
+/***/ }),
+
+/***/ "./public/assets/js/src/events/Task.ts":
+/*!*********************************************!*\
+  !*** ./public/assets/js/src/events/Task.ts ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
+const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
+const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
+exports["default"] = () => new (class Task {
+    constructor() {
+        new oddlyjs_1.Events(this);
+    }
+    async add(e) {
+        e.preventDefault();
+        const response = await (0, fetch_1.default)('/task/add', {
+            body: {
+                objective: $('#task-objective').val(),
+                leadEmployeeId: $('#task-employee-id').val(),
+            }
+        });
+        if (response.successful) {
+            (0, modal_1.closeModal)('new-task');
+            return (0, oddlyjs_1.Refresh)();
+        }
+    }
+});
+
+
+/***/ }),
+
 /***/ "./public/assets/js/src/events/Util.ts":
 /*!*********************************************!*\
   !*** ./public/assets/js/src/events/Util.ts ***!
@@ -98,10 +172,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const user_1 = __importDefault(__webpack_require__(/*! ./user */ "./public/assets/js/src/events/user.ts"));
+const Task_1 = __importDefault(__webpack_require__(/*! ./Task */ "./public/assets/js/src/events/Task.ts"));
 const Util_1 = __importDefault(__webpack_require__(/*! ./Util */ "./public/assets/js/src/events/Util.ts"));
+const Announcement_1 = __importDefault(__webpack_require__(/*! ./Announcement */ "./public/assets/js/src/events/Announcement.ts"));
 exports["default"] = () => {
     (0, user_1.default)();
+    (0, Task_1.default)();
     (0, Util_1.default)();
+    (0, Announcement_1.default)();
 };
 
 
@@ -225,7 +303,7 @@ exports["default"] = () => new (class User {
                 'Owner': '/project-managers',
                 'Project manager': '/project-managers',
                 'Department manager': '/task-manager',
-                'Employee': '/tasks',
+                'Employee': '/task-manager',
             };
             return (0, oddlyjs_1.Next)(roles[$('input[name="account-type"]:checked').val()]);
         }
@@ -394,6 +472,11 @@ exports["default"] = () => {
     (0, oddlyjs_1.Route)({
         name: 'task.manager',
         url: '/task-manager',
+        layoutpath: 'info'
+    });
+    (0, oddlyjs_1.Route)({
+        name: 'announcements',
+        url: '/announcements',
         layoutpath: 'info'
     });
 };
@@ -653,7 +736,17 @@ class KoliEngine {
             }
             lastValue = value;
         }
-        let renderedContent = '';
+        let renderedContent = '', elseBody = '';
+        const hasElse = Utility_1.default.blockHasElse(block);
+        console.log(hasElse, block);
+        if (hasElse) {
+            const ifArray = sameBody.split('{{else}}');
+            if (ifArray.length > 2)
+                throw 'If block has more than two else statements';
+            [sameBody, elseBody] = ifArray;
+            if (!same)
+                renderedContent += await this.subRender(elseBody, this._data);
+        }
         if (same)
             renderedContent += await this.subRender(sameBody, this._data);
         this.replaceContent(block, renderedContent);
@@ -678,8 +771,8 @@ class KoliEngine {
         // do not cache any component that uses helpers like 'fetch'
         // it will prevent the same component from being compiled a second time even thou
         // the fetch would return different data
-        // if (!this._hasInternalDataFetch)
-        //     this._cache.store(cacheKey, this._content);
+        if (!this._hasInternalDataFetch)
+            this._cache.store(cacheKey, this._content);
     }
     async render(config = {}) {
         try {
@@ -791,7 +884,8 @@ class KoliHelpers {
         concat: this.concat,
         signal: this.signal,
         datetime: this.datetime,
-        readheader: this.readheader
+        readheader: this.readheader,
+        minus: this.minus
     };
     _userDefinedHelpers = [];
     _terminatorHelpers = [];
@@ -885,6 +979,15 @@ class KoliHelpers {
             res.push(arg.value);
         });
         return res.join(' ');
+    }
+    minus(...args) {
+        if (args.length < 2)
+            return;
+        let total = args[0].value;
+        for (let i = 1; i < args.length; i++) {
+            total -= args[i].value;
+        }
+        return total;
     }
     arraylen(...args) {
         const value = Array.isArray(args[0].value) ? args[0].value : [];
@@ -1606,6 +1709,13 @@ const initHelpers = () => {
     Environment_1.default.kolijs.setHelper('linkActive', function (str) {
         return `data-linkactive="${str}"`;
     });
+    Environment_1.default.kolijs.setHelper('cutstr', function (str, length, offset) {
+        length = parseInt(length);
+        let offsetLength = offset && offset.length < 40 ? 40 - offset.length : 0;
+        if (str.length <= offsetLength + length)
+            return str;
+        return `${str.slice(0, length + offsetLength + 1)}...`;
+    });
     EventTypes_1.default.forEach(eventType => {
         Environment_1.default.kolijs.setHelper(eventType, function (...fns) {
             let res = `on${eventType}="`;
@@ -1869,11 +1979,6 @@ exports["default"] = new (class Layouts {
         if (!contentRegenate) {
             Middleware_1.default.once(() => {
                 Util_1.default.prependToBody(layout.content);
-                // Components.initNavEvents();
-                // Components.initHighlightNavItems();
-                // const router = Router.use(Router.currentRoute.name);
-                // Components.initEvents('loaded');
-                // Components.initOnLoaded()
                 Router_1.default.currentRoute.initDOMLoaded();
             });
         }
@@ -1889,12 +1994,6 @@ exports["default"] = new (class Layouts {
         Middleware_1.default.once(() => {
             layout.removeUnusedElements();
             layout.addNewElements();
-            // Util.prependToBody(layout.content);
-            // Components.initNavEvents();
-            // Components.initHighlightNavItems();
-            // const router = Router.use(Router.currentRoute.name);
-            // Components.initEvents('loaded');
-            // Components.initOnLoaded()
             Router_1.default.currentRoute.initDOMLoaded();
         });
     }

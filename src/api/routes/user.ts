@@ -3,7 +3,7 @@ import { Application } from "express";
 import baseController from "../controllers/base";
 import userService from "../../services/User"
 
-import { isUserOwnerOrProjectManager, isDepartmentManager, isNotEmployee } from "../..//middleware";
+import { isUserOwnerOrProjectManager, isDepartmentManagerOrEmployee, isNotEmployee } from "../../middleware";
 
 export default (app: Application) => {
     app.post('/sign-up', baseController.wrap(userService.signUpOwner));
@@ -13,7 +13,8 @@ export default (app: Application) => {
     app.get('/project-managers', isUserOwnerOrProjectManager, baseController.render('Managers'));
     app.get('/department-managers', isUserOwnerOrProjectManager, baseController.render('Departments'));
     app.get('/employees', isNotEmployee, baseController.render('Employees'));
-    app.get('/task-manager', isDepartmentManager, baseController.render('Task manager'));
+    app.get('/task-manager', isDepartmentManagerOrEmployee, baseController.render('Task manager'));
+    app.get('/announcements', baseController.render('Announcements'));
 
     app.post('/user/add/project-manager', baseController.wrap_with_store(userService.addProjectManager))
     app.post('/user/add/department-manager', baseController.wrap_with_store(userService.addDepartmentManager))

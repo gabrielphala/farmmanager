@@ -1,0 +1,28 @@
+<div class="modal modal--closed flex--a-start flex--j-center" id="new-announcement-modal">
+    <form class="modal__main card" {{submit "Announcement.send(event)" }}>
+        <div class="card__header flex flex--a-center flex--j-space-between">
+            <div>
+                <h4>Send announcement</h4>
+            </div>
+            <svg class="image--icon" {{click "Util.closeModal('new-task')" }}>
+                <use href="#cross"></use>
+            </svg>
+        </div>
+        <div class="error-container hide" style="padding: 0 1.8rem;" id="announce-error">
+            <p></p>
+        </div>
+        <div class="card__body">
+            <div class="input">
+                <input type="text" id="announcement-subject" placeholder="Subject...">
+            </div>
+
+            <div class="input margin--top-1">
+                <textarea id="announcement-message" placeholder="Message..."></textarea>
+            </div>
+        </div>
+        <div class="card__footer">
+            <button class="btn btn--primary">Send message</button>
+            <button type="button" class="btn" {{click "Util.closeModal('new-announcement')" }}>Cancel</button>
+        </div>
+    </form>
+</div>

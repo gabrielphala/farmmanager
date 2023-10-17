@@ -1,0 +1,34 @@
+
+
+<div class="modal modal--closed flex--a-start flex--j-center" id="new-task-modal">
+    <form class="modal__main card" {{submit "Task.add(event)" }}>
+        <div class="card__header flex flex--a-center flex--j-space-between">
+            <div>
+                <h1>New task.</h1>
+                <p>Add a task for employees</p>
+            </div>
+            <svg class="image--icon" {{click "Util.closeModal('new-task')" }}>
+                <use href="#cross"></use>
+            </svg>
+        </div>
+        <div class="card__body">
+            <div class="input margin--top-1">
+                <input type="text" id="task-objective" placeholder="Objective">
+            </div>
+            <div class="input margin--top-1">
+                <label class="input__label" for="task-employee-id">Task Lead (Reporting) Employee</label>
+                <select name="" id="task-employee-id">
+                    <option value="select">Select</option>
+
+                    {{#each res.employees}}
+                        <option value="{{this.id}}">{{this.fullname}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="card__footer">
+            <button class="btn btn--primary">Add task</button>
+            <button type="button" class="btn" {{click "Util.closeModal('new-task')" }}>Cancel</button>
+        </div>
+    </form>
+</div>

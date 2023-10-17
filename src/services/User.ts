@@ -170,7 +170,11 @@ export default class UserServices {
             });
 
             const userInfo = await User.findOne({
-                condition: { email, role, isDeleted: false }
+                condition: { email, role, isDeleted: false },
+                join: {
+                    ref: 'farm',
+                    id: 'farm_id'
+                }
             })
 
             if (!userInfo) throw 'Email address, password, or role is incorrect';
@@ -183,12 +187,11 @@ export default class UserServices {
 
             delete userInfo.password;
 
-            let details = { ...userInfo.toObject(), ...farmDetails.toObject() }
 
-            const tokens = jwt.get_cookie_tokens(details);
+            const tokens = jwt.get_cookie_tokens(userInfo.toObject());
             wrapRes.set_cookie('fm_user', tokens);
 
-            wrapRes.userDetails = details;
+            wrapRes.userDetails = userInfo.toObject();
             wrapRes.successful = true;
 
         } catch (e) { throw e; }

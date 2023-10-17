@@ -141,7 +141,7 @@ export default () => new (class User {
                 'Owner': '/project-managers',
                 'Project manager': '/project-managers',
                 'Department manager': '/task-manager',
-                'Employee': '/tasks',
+                'Employee': '/task-manager',
             }
 
             return Next(roles[$('input[name="account-type"]:checked').val() as string])

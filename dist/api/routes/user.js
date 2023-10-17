@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = __importDefault(require("../controllers/base"));
 const User_1 = __importDefault(require("../../services/User"));
-const middleware_1 = require("../..//middleware");
+const middleware_1 = require("../../middleware");
 exports.default = (app) => {
     app.post('/sign-up', base_1.default.wrap(User_1.default.signUpOwner));
     app.post('/sign-in', base_1.default.wrap(User_1.default.signIn));
@@ -13,7 +13,8 @@ exports.default = (app) => {
     app.get('/project-managers', middleware_1.isUserOwnerOrProjectManager, base_1.default.render('Managers'));
     app.get('/department-managers', middleware_1.isUserOwnerOrProjectManager, base_1.default.render('Departments'));
     app.get('/employees', middleware_1.isNotEmployee, base_1.default.render('Employees'));
-    app.get('/task-manager', middleware_1.isDepartmentManager, base_1.default.render('Task manager'));
+    app.get('/task-manager', middleware_1.isDepartmentManagerOrEmployee, base_1.default.render('Task manager'));
+    app.get('/announcements', base_1.default.render('Announcements'));
     app.post('/user/add/project-manager', base_1.default.wrap_with_store(User_1.default.addProjectManager));
     app.post('/user/add/department-manager', base_1.default.wrap_with_store(User_1.default.addDepartmentManager));
     app.post('/user/remove/department-manager', base_1.default.wrap_with_store(User_1.default.removeDepartmentManager));
