@@ -26,6 +26,12 @@ export default (): void => {
     })
 
     Route({
+        name: 'switch.ownership',
+        url: '/switch-ownership',
+        layoutpath: 'info'
+    })
+
+    Route({
         name: 'announcements',
         url: '/announcements',
         layoutpath: 'info'

@@ -1,8 +1,11 @@
 import { Events, Next, Environment, Refresh } from "oddlyjs"
-import { loadSignal } from "oddlyjs/src/Signal";
+
 
 import { showError } from "../helpers/error-container";
 import { closeModal } from "../helpers/modal";
+
+import Util from "./Util";
+
 import fetch from "../helpers/fetch";
 
 export default () => new (class User {
@@ -30,6 +33,29 @@ export default () => new (class User {
         }
 
         showError('auth', response.error)
+    }
+    
+    async switchOwners (e: PointerEvent) {
+        e.preventDefault();
+
+        $('#switch-btn').text('Switching owners...')
+        $('#switch-btn').prop('disabled', true)
+
+        const response = await fetch('/user/switch-owners', {
+            body: {
+                fullname: $('#fullname').val(),
+                email: $('#email-address').val()
+            }
+        })
+
+        if (response.successful) {
+            $('#switch-btn').text('Switch')
+            $('#switch-btn').prop('disabled', false)
+
+            return Util().signOut()
+        }
+
+        showError('switch-owners', response.error)
     }
 
     async addProjectManager (e: PointerEvent) {

@@ -54,6 +54,34 @@ export default class UserServices {
         return wrapRes;
     }
 
+    static async switchOwners (wrapRes: IResponse, body: IAny, { userInfo } : IAny) : Promise <IResponse> {
+        try {
+            const { fullname, email } = body;
+            
+            v.validate({
+                'full name': { value: fullname, min: 5, max: 36 },
+                'email address': { value: email, min: 5, max: 46 }
+            });
+
+            if ((await User.exists({email})).found) throw `Email address: ${email} already exists`;
+
+            const ownerDetails = await User.insert({
+                farm_id: userInfo.farm_id,
+                fullname,
+                role: 'Owner',
+                email,
+                password: await hasher.hash('Password123')
+            })
+            
+            User.update({ id: userInfo.id }, { isDeleted: true });
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
     static async addProjectManager (wrapRes: IResponse, body: IAny, { userInfo }: IAny): Promise<IResponse> {
         try {
             const { fullname, email } = body;

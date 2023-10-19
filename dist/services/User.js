@@ -47,6 +47,30 @@ class UserServices {
         }
         return wrapRes;
     }
+    static async switchOwners(wrapRes, body, { userInfo }) {
+        try {
+            const { fullname, email } = body;
+            Validation_1.default.validate({
+                'full name': { value: fullname, min: 5, max: 36 },
+                'email address': { value: email, min: 5, max: 46 }
+            });
+            if ((await User_1.default.exists({ email })).found)
+                throw `Email address: ${email} already exists`;
+            const ownerDetails = await User_1.default.insert({
+                farm_id: userInfo.farm_id,
+                fullname,
+                role: 'Owner',
+                email,
+                password: await Hasher_1.default.hash('Password123')
+            });
+            User_1.default.update({ id: userInfo.id }, { isDeleted: true });
+            wrapRes.successful = true;
+        }
+        catch (e) {
+            throw e;
+        }
+        return wrapRes;
+    }
     static async addProjectManager(wrapRes, body, { userInfo }) {
         try {
             const { fullname, email } = body;

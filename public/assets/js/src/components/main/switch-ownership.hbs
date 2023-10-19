@@ -1,0 +1,23 @@
+{{~scope 'switch.ownership'}}
+
+<div class="container__main__center">
+    <h4 class="container__main__center__title">Switch ownership</h4>
+
+    <div class="container" style="width: 40rem;">
+        <form style="margin-top: 2rem;" {{submit "User.switchOwners(event)"}}>
+            <div class="error-container hide" style="margin-bottom: 1rem;" id="switch-owners-error">
+                <p></p>
+            </div>
+
+            <div class="input">
+                <input type="text" id="fullname" placeholder="Full name">
+            </div>
+        
+            <div class="input margin--top-1">
+                <input type="text" id="email-address" placeholder="Email address">
+            </div>
+
+            <button class="btn btn--primary margin--top-2" id="switch-btn">Switch</button>
+        </form>
+    </div>
+</div>

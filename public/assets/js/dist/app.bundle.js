@@ -229,6 +229,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
 const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
 const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
+const Util_1 = __importDefault(__webpack_require__(/*! ./Util */ "./public/assets/js/src/events/Util.ts"));
 const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
 exports["default"] = () => new (class User {
     constructor() {
@@ -250,6 +251,23 @@ exports["default"] = () => new (class User {
             return (0, oddlyjs_1.Next)('/project-managers');
         }
         (0, error_container_1.showError)('auth', response.error);
+    }
+    async switchOwners(e) {
+        e.preventDefault();
+        $('#switch-btn').text('Switching owners...');
+        $('#switch-btn').prop('disabled', true);
+        const response = await (0, fetch_1.default)('/user/switch-owners', {
+            body: {
+                fullname: $('#fullname').val(),
+                email: $('#email-address').val()
+            }
+        });
+        if (response.successful) {
+            $('#switch-btn').text('Switch');
+            $('#switch-btn').prop('disabled', true);
+            return (0, Util_1.default)().signOut();
+        }
+        (0, error_container_1.showError)('switch-owners', response.error);
     }
     async addProjectManager(e) {
         e.preventDefault();
@@ -488,6 +506,11 @@ exports["default"] = () => {
     (0, oddlyjs_1.Route)({
         name: 'task.manager',
         url: '/task-manager',
+        layoutpath: 'info'
+    });
+    (0, oddlyjs_1.Route)({
+        name: 'switch.ownership',
+        url: '/switch-ownership',
         layoutpath: 'info'
     });
     (0, oddlyjs_1.Route)({

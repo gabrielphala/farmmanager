@@ -15,8 +15,10 @@ exports.default = (app) => {
     app.get('/employees', middleware_1.isNotEmployee, base_1.default.render('Employees'));
     app.get('/task-manager', middleware_1.isDepartmentManagerOrEmployee, base_1.default.render('Task manager'));
     app.get('/announcements', base_1.default.render('Announcements'));
+    app.get('/switch-ownership', base_1.default.render('Switch ownership'));
     app.post('/user/add/project-manager', base_1.default.wrap_with_store(User_1.default.addProjectManager));
     app.post('/user/remove', base_1.default.wrap_with_store(User_1.default.removeFarmUser));
+    app.post('/user/switch-owners', base_1.default.wrap_with_store(User_1.default.switchOwners));
     app.post('/user/add/department-manager', base_1.default.wrap_with_store(User_1.default.addDepartmentManager));
     app.post('/user/add/department-employee', base_1.default.wrap_with_store(User_1.default.addDepartmentEmployee));
     app.post('/user/get/details/by/session', base_1.default.wrap_with_store(User_1.default.getCurrentUserBySession));

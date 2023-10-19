@@ -35,6 +35,16 @@
                 </svg>
                 <span>Tasks</span>
             </a>
+            
+            {{#same userDetails.role 'Owner'}}
+                <a href="/switch-ownership" class="sidenav__body__ul__li flex" {{click "Util.nav(event)" }}>
+                    <svg class="image--icon margin--right-1">
+                        <use href="#user-group"></use>
+                    </svg>
+                    <span>Swicth Owners</span>
+                </a>
+            {{/same}}
+
             <li class="sidenav__body__ul__li flex" style="cursor: pointer;" {{click 'Util.signOut()'}}>
                 <svg class="image--icon margin--right-1">
                     <use href="#sign-off"></use>
