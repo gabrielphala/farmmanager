@@ -264,7 +264,7 @@ exports["default"] = () => new (class User {
         });
         if (response.successful) {
             $('#switch-btn').text('Switch');
-            $('#switch-btn').prop('disabled', true);
+            $('#switch-btn').prop('disabled', false);
             return (0, Util_1.default)().signOut();
         }
         (0, error_container_1.showError)('switch-owners', response.error);
