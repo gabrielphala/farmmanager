@@ -29,12 +29,12 @@
                 </svg>
                 <span>Announcements</span>
             </a>
-            <li class="sidenav__body__ul__li flex">
+            <a href="/task-manager" class="sidenav__body__ul__li flex" {{click "Util.nav(event)"}}>
                 <svg class="image--icon margin--right-1">
                     <use href="#notebook"></use>
                 </svg>
                 <span>Tasks</span>
-            </li>
+            </a>
             <li class="sidenav__body__ul__li flex" style="cursor: pointer;" {{click 'Util.signOut()'}}>
                 <svg class="image--icon margin--right-1">
                     <use href="#sign-off"></use>

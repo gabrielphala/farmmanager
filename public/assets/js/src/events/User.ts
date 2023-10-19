@@ -71,24 +71,6 @@ export default () => new (class User {
         // showError('auth', response.error)
     }
 
-    async removeDepartmentManager (id, departmentName) {
-
-        const response = await fetch('/user/remove/department-manager', {
-            body: {
-                userId: id,
-                departmentName
-            }
-        })
-
-        if (response.successful) {
-            Refresh()
-
-            closeModal('new-department-manager')
-        }
-
-        // showError('auth', response.error)
-    }
-
     async addDepartmentEmployee (e: PointerEvent) {
         e.preventDefault();
 
@@ -108,9 +90,8 @@ export default () => new (class User {
         // showError('auth', response.error)
     }
 
-    async removeDepartmentEmployee (id) {
-
-        const response = await fetch('/user/remove/department-employee', {
+    async removeUser (id) {
+        const response = await fetch('/user/remove', {
             body: {
                 userId: id
             }
@@ -119,8 +100,6 @@ export default () => new (class User {
         if (response.successful) {
             Refresh();
         }
-
-        // showError('auth', response.error)
     }
 
     async signIn (e: PointerEvent) {

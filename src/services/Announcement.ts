@@ -28,11 +28,25 @@ export default class AnnouncementServices {
         return wrapRes;
     }
 
+    static async remove (wrapRes: IResponse, body: IAny) : Promise <IResponse> {
+        try {
+            const { id } = body;
+
+            Announcement.update({id}, { isDeleted: true })
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
     static async getByFarm (wrapRes: IResponse, _: IAny, { userInfo }: IAny) : Promise <IResponse> {
         try {
             wrapRes.announcements = await Announcement.find({
                 condition: {
-                    farm_id: userInfo.farm_id
+                    farm_id: userInfo.farm_id,
+                    isDeleted: { $ne: true }
                 },
                 join: {
                     ref: 'user',

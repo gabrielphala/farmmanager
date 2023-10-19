@@ -66,6 +66,16 @@ exports["default"] = () => new (class Announcement {
         }
         (0, error_container_1.showError)('announce', response.error);
     }
+    async remove(id) {
+        const response = await (0, fetch_1.default)('/announcement/remove', {
+            body: {
+                id
+            }
+        });
+        if (response.successful) {
+            return (0, oddlyjs_1.Refresh)();
+        }
+    }
 });
 
 
@@ -99,6 +109,26 @@ exports["default"] = () => new (class Task {
         });
         if (response.successful) {
             (0, modal_1.closeModal)('new-task');
+            return (0, oddlyjs_1.Refresh)();
+        }
+    }
+    async finish(task_id) {
+        const response = await (0, fetch_1.default)('/task/finish', {
+            body: {
+                task_id
+            }
+        });
+        if (response.successful) {
+            return (0, oddlyjs_1.Refresh)();
+        }
+    }
+    async remove(task_id) {
+        const response = await (0, fetch_1.default)('/task/remove', {
+            body: {
+                task_id
+            }
+        });
+        if (response.successful) {
             return (0, oddlyjs_1.Refresh)();
         }
     }
@@ -250,19 +280,6 @@ exports["default"] = () => new (class User {
         }
         // showError('auth', response.error)
     }
-    async removeDepartmentManager(id, departmentName) {
-        const response = await (0, fetch_1.default)('/user/remove/department-manager', {
-            body: {
-                userId: id,
-                departmentName
-            }
-        });
-        if (response.successful) {
-            (0, oddlyjs_1.Refresh)();
-            (0, modal_1.closeModal)('new-department-manager');
-        }
-        // showError('auth', response.error)
-    }
     async addDepartmentEmployee(e) {
         e.preventDefault();
         const response = await (0, fetch_1.default)('/user/add/department-employee', {
@@ -277,8 +294,8 @@ exports["default"] = () => new (class User {
         }
         // showError('auth', response.error)
     }
-    async removeDepartmentEmployee(id) {
-        const response = await (0, fetch_1.default)('/user/remove/department-employee', {
+    async removeUser(id) {
+        const response = await (0, fetch_1.default)('/user/remove', {
             body: {
                 userId: id
             }
@@ -286,7 +303,6 @@ exports["default"] = () => new (class User {
         if (response.successful) {
             (0, oddlyjs_1.Refresh)();
         }
-        // showError('auth', response.error)
     }
     async signIn(e) {
         e.preventDefault();

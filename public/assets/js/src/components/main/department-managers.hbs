@@ -30,7 +30,7 @@
                 
                     {{#same userDetails.role 'Project manager'}}
                         <li class="table__body__row__item">
-                            <span {{click "User.removeDepartmentManager('<<this.id>>', '<<this.department>>')"}}>Remove</span>
+                            <span {{click "User.removeUser('<<this.id>>')"}}>Remove</span>
                         </li>
                     {{/same}}
                 </ul>

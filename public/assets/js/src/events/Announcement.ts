@@ -27,4 +27,16 @@ export default () => new (class Announcement {
 
         showError('announce', response.error)
     }
+
+    async remove (id) {
+        const response = await fetch('/announcement/remove', {
+            body: {
+                id
+            }
+        })
+
+        if (response.successful){
+            return Refresh()
+        }
+    }
 });

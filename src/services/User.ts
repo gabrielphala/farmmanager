@@ -107,11 +107,11 @@ export default class UserServices {
         return wrapRes;
     }
 
-    static async removeDepartmentManager (wrapRes: IResponse, body: IAny, { userInfo }: IAny): Promise<IResponse> {
+    static async removeFarmUser (wrapRes: IResponse, body: IAny): Promise<IResponse> {
         try {
-            const { departmentName: department, userId } = body;
+            const { userId } = body;
 
-            await User.update({ farm_id: userInfo.farm_id, department }, { isDeleted: true })
+            await User.update({ id: userId }, { isDeleted: true })
 
             wrapRes.successful = true;
 
@@ -139,19 +139,6 @@ export default class UserServices {
                 farm_id: userInfo.farm_id,
                 password: await hasher.hash('Password123')
             })
-
-            wrapRes.successful = true;
-
-        } catch (e) { throw e; }
-
-        return wrapRes;
-    }
-
-    static async removeDepartmentEmployee (wrapRes: IResponse, body: IAny): Promise<IResponse> {
-        try {
-            const { userId } = body;
-
-            await User.update({ id: userId }, { isDeleted: true })
 
             wrapRes.successful = true;
 

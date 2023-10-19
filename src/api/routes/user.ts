@@ -17,10 +17,9 @@ export default (app: Application) => {
     app.get('/announcements', baseController.render('Announcements'));
 
     app.post('/user/add/project-manager', baseController.wrap_with_store(userService.addProjectManager))
+    app.post('/user/remove', baseController.wrap_with_store(userService.removeFarmUser))
     app.post('/user/add/department-manager', baseController.wrap_with_store(userService.addDepartmentManager))
-    app.post('/user/remove/department-manager', baseController.wrap_with_store(userService.removeDepartmentManager))
     app.post('/user/add/department-employee', baseController.wrap_with_store(userService.addDepartmentEmployee))
-    app.post('/user/remove/department-employee', baseController.wrap(userService.removeDepartmentEmployee))
     app.post('/user/get/details/by/session', baseController.wrap_with_store(userService.getCurrentUserBySession))
     app.post('/users/get/project-managers/by/farm', baseController.wrap_with_store(userService.getProjectManagers));
     app.post('/users/get/department-managers/by/farm', baseController.wrap_with_store(userService.getDepartmentManagers));

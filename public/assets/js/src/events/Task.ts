@@ -25,4 +25,28 @@ export default () => new (class Task {
             return Refresh()
         }
     }
+
+    async finish (task_id) {
+        const response = await fetch('/task/finish', {
+            body: {
+                task_id
+            }
+        })
+
+        if (response.successful){
+            return Refresh()
+        }
+    }
+
+    async remove (task_id) {
+        const response = await fetch('/task/remove', {
+            body: {
+                task_id
+            }
+        })
+
+        if (response.successful){
+            return Refresh()
+        }
+    }
 });

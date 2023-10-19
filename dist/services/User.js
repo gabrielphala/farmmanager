@@ -95,10 +95,10 @@ class UserServices {
         }
         return wrapRes;
     }
-    static async removeDepartmentManager(wrapRes, body, { userInfo }) {
+    static async removeFarmUser(wrapRes, body) {
         try {
-            const { departmentName: department, userId } = body;
-            await User_1.default.update({ farm_id: userInfo.farm_id, department }, { isDeleted: true });
+            const { userId } = body;
+            await User_1.default.update({ id: userId }, { isDeleted: true });
             wrapRes.successful = true;
         }
         catch (e) {
@@ -123,17 +123,6 @@ class UserServices {
                 farm_id: userInfo.farm_id,
                 password: await Hasher_1.default.hash('Password123')
             });
-            wrapRes.successful = true;
-        }
-        catch (e) {
-            throw e;
-        }
-        return wrapRes;
-    }
-    static async removeDepartmentEmployee(wrapRes, body) {
-        try {
-            const { userId } = body;
-            await User_1.default.update({ id: userId }, { isDeleted: true });
             wrapRes.successful = true;
         }
         catch (e) {

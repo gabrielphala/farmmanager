@@ -29,6 +29,32 @@ export default class TaskServices {
         return wrapRes;
     }
 
+    static async finish (wrapRes: IResponse, body: IAny) : Promise <IResponse> {
+        try {
+            const { task_id } = body;
+            
+            Task.update({ id: task_id }, { progress: 'done' });
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
+    static async remove (wrapRes: IResponse, body: IAny) : Promise <IResponse> {
+        try {
+            const { task_id } = body;
+            
+            Task.update({ id: task_id }, { isDeleted: true });
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
     static async getByFarm (wrapRes: IResponse, body: IAny, { userInfo }: IAny) : Promise <IResponse> {
         try {
             wrapRes.tasks = await Task.find({

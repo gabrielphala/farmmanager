@@ -18,10 +18,7 @@ exports.default = new (class User extends sqlifier_1.SQLifier {
     }
     getProjectManagers(farmId) {
         return this.find({
-            condition: [
-                { role: 'Owner', farm_id: farmId, isDeleted: false },
-                { role: 'Project manager', farm_id: farmId, isDeleted: false },
-            ]
+            condition: { role: 'Project manager', farm_id: farmId, isDeleted: false }
         });
     }
     getDepartmentManagers(farmId) {

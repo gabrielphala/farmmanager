@@ -26,6 +26,28 @@ class TaskServices {
         }
         return wrapRes;
     }
+    static async finish(wrapRes, body) {
+        try {
+            const { task_id } = body;
+            Task_1.default.update({ id: task_id }, { progress: 'done' });
+            wrapRes.successful = true;
+        }
+        catch (e) {
+            throw e;
+        }
+        return wrapRes;
+    }
+    static async remove(wrapRes, body) {
+        try {
+            const { task_id } = body;
+            Task_1.default.update({ id: task_id }, { isDeleted: true });
+            wrapRes.successful = true;
+        }
+        catch (e) {
+            throw e;
+        }
+        return wrapRes;
+    }
     static async getByFarm(wrapRes, body, { userInfo }) {
         try {
             wrapRes.tasks = await Task_1.default.find({

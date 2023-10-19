@@ -16,10 +16,9 @@ exports.default = (app) => {
     app.get('/task-manager', middleware_1.isDepartmentManagerOrEmployee, base_1.default.render('Task manager'));
     app.get('/announcements', base_1.default.render('Announcements'));
     app.post('/user/add/project-manager', base_1.default.wrap_with_store(User_1.default.addProjectManager));
+    app.post('/user/remove', base_1.default.wrap_with_store(User_1.default.removeFarmUser));
     app.post('/user/add/department-manager', base_1.default.wrap_with_store(User_1.default.addDepartmentManager));
-    app.post('/user/remove/department-manager', base_1.default.wrap_with_store(User_1.default.removeDepartmentManager));
     app.post('/user/add/department-employee', base_1.default.wrap_with_store(User_1.default.addDepartmentEmployee));
-    app.post('/user/remove/department-employee', base_1.default.wrap(User_1.default.removeDepartmentEmployee));
     app.post('/user/get/details/by/session', base_1.default.wrap_with_store(User_1.default.getCurrentUserBySession));
     app.post('/users/get/project-managers/by/farm', base_1.default.wrap_with_store(User_1.default.getProjectManagers));
     app.post('/users/get/department-managers/by/farm', base_1.default.wrap_with_store(User_1.default.getDepartmentManagers));

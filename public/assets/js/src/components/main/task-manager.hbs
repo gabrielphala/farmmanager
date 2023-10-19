@@ -16,6 +16,10 @@
                 {{#same userDetails.role 'Employee'}}
                     <li class="table__header__row__item">...</li>
                 {{/same}}
+
+                {{#same userDetails.role 'Department manager'}}
+                    <li class="table__header__row__item">...</li>
+                {{/same}}
             </ul>
         </div>
         <div class="table__body">
@@ -27,8 +31,12 @@
                     <li class="table__body__row__item">{{this.progress}}</li>
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
 
+                    {{#same userDetails.role 'Department manager'}}
+                        <li class="table__body__row__item" style="cursor: pointer;" {{click "Task.remove('<<this.id>>')"}}>Delete</li>
+                    {{/same}}
+
                     {{#same userDetails.fullname this.fullname}}
-                        <li class="table__body__row__item">Mark as completed</li>
+                        <li class="table__body__row__item" style="cursor: pointer;"  {{click "Task.finish('<<this.id>>')"}}>Mark as completed</li>
                     {{else}}
                         {{#same userDetails.role 'Employee'}}
                             <li class="table__body__row__item">No action</li>

@@ -9,6 +9,7 @@ export default new (class User extends SQLifier {
             lead_employee_id: { type: 'int', ref: 'user' },
             farm_id: { type: 'int', ref: 'farm' },
             objective: { type: 'varchar', length: 136 },
+            progress: { type: 'varchar', length: 50, default: 'ongoing' },
             createdOn: { type: 'datetime', default: SQLDate.now },
             isDeleted: { type: 'boolean', default: false }
         })

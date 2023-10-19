@@ -26,11 +26,23 @@ class AnnouncementServices {
         }
         return wrapRes;
     }
+    static async remove(wrapRes, body) {
+        try {
+            const { id } = body;
+            Announcement_1.default.update({ id }, { isDeleted: true });
+            wrapRes.successful = true;
+        }
+        catch (e) {
+            throw e;
+        }
+        return wrapRes;
+    }
     static async getByFarm(wrapRes, _, { userInfo }) {
         try {
             wrapRes.announcements = await Announcement_1.default.find({
                 condition: {
-                    farm_id: userInfo.farm_id
+                    farm_id: userInfo.farm_id,
+                    isDeleted: { $ne: true }
                 },
                 join: {
                     ref: 'user',

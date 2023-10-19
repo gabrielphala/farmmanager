@@ -9,7 +9,8 @@ export default new (class Announcement extends SQLifier {
             sender_id: { type: 'int', ref: 'User' },
             farm_id: { type: 'int', ref: 'Farm' },
             subject: { type: 'varchar', length: 255 },
-            message: { type: 'varchar', length: 1024 }
+            message: { type: 'varchar', length: 1024 },
+            isDeleted: { type: 'boolean', default: false }
         })
     }
 })
