@@ -177,9 +177,9 @@ export default class UserServices {
                 }
             })
 
-            if (!userInfo) throw 'Email address, password, or role is incorrect';
+            if (!userInfo) throw 'User does not exist';
 
-            if (!(await hasher.isSame(userInfo.password, password))) throw 'Email address, password, or role is incorrect';
+            if (!(await hasher.isSame(userInfo.password, password))) throw 'Password incorrect';
 
             const farmDetails = await Farm.findOne({
                 condition: { id: userInfo.farm_id }
