@@ -50,16 +50,33 @@ class TaskServices {
     }
     static async getByFarm(wrapRes, body, { userInfo }) {
         try {
-            wrapRes.tasks = await Task_1.default.find({
-                condition: {
-                    farm_id: userInfo.farm_id,
-                    isDeleted: false
-                },
-                join: {
-                    ref: 'user',
-                    id: 'lead_employee_id'
-                }
-            });
+            if (!userInfo.department)
+                wrapRes.tasks = await Task_1.default.find({
+                    condition: {
+                        farm_id: userInfo.farm_id,
+                        isDeleted: false
+                    },
+                    join: {
+                        ref: 'user',
+                        id: 'lead_employee_id'
+                    }
+                });
+            else {
+                wrapRes.tasks = await Task_1.default.find({
+                    condition: {
+                        farm_id: userInfo.farm_id,
+                        isDeleted: false
+                    },
+                    join: {
+                        ref: 'user',
+                        kind: 'right',
+                        condition: {
+                            'id': { $r: 'task.lead_employee_id' },
+                            'department': userInfo.department
+                        }
+                    }
+                });
+            }
             wrapRes.successful = true;
         }
         catch (e) {

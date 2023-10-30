@@ -14,6 +14,7 @@ export default (app: Application) => {
     app.get('/department-managers', isUserOwnerOrProjectManager, baseController.render('Departments'));
     app.get('/employees', isNotEmployee, baseController.render('Employees'));
     app.get('/task-manager', isDepartmentManagerOrEmployee, baseController.render('Task manager'));
+    app.get('/projects', isDepartmentManagerOrEmployee, baseController.render('Projects'));
     app.get('/announcements', baseController.render('Announcements'));
     app.get('/switch-ownership', baseController.render('Switch ownership'));
 

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../models/User"));
 const Farm_1 = __importDefault(require("../models/Farm"));
+const Department_1 = __importDefault(require("../models/Department"));
 const Validation_1 = __importDefault(require("../helpers/Validation"));
 const Hasher_1 = __importDefault(require("../helpers/Hasher"));
 const Jwt_1 = __importDefault(require("../helpers/Jwt"));
@@ -75,8 +76,8 @@ class UserServices {
         try {
             const { fullname, email } = body;
             Validation_1.default.validate({
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
             await User_1.default.insert({
                 fullname,
@@ -96,9 +97,9 @@ class UserServices {
         try {
             const { department, fullname, email } = body;
             Validation_1.default.validate({
-                'Department name': { value: department, min: 5, max: 55 },
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'Department name': { value: department, min: 5, max: 60 },
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
             if ((await User_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
@@ -112,6 +113,12 @@ class UserServices {
                 farm_id: userInfo.farm_id,
                 password: await Hasher_1.default.hash('Password123')
             });
+            if (!(await Department_1.default.exists({ name: department })).found) {
+                Department_1.default.insert({
+                    name: department,
+                    farm_id: userInfo.farm_id
+                });
+            }
             wrapRes.successful = true;
         }
         catch (e) {
@@ -134,8 +141,8 @@ class UserServices {
         try {
             const { fullname, email } = body;
             Validation_1.default.validate({
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
             if ((await User_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
@@ -158,7 +165,7 @@ class UserServices {
         try {
             const { email, password, role } = body;
             Validation_1.default.validate({
-                'email address': { value: email, min: 5, max: 46 },
+                'email address': { value: email, min: 5, max: 60 },
                 'password': { value: password, min: 8, max: 16 }
             });
             const userInfo = await User_1.default.findOne({
@@ -199,7 +206,14 @@ class UserServices {
         return wrapRes;
     }
     static async getDepartmentEmployees(wrapRes, body, store) {
-        wrapRes.employees = await User_1.default.getDepartmentEmployees(store.userInfo.farm_id);
+        let employees;
+        if (!store.userInfo.department) {
+            employees = await User_1.default.getDepartmentEmployees(store.userInfo.farm_id);
+        }
+        else {
+            employees = await User_1.default.getDepartmentEmployeesByDepartment(store.userInfo.farm_id, store.userInfo.department);
+        }
+        wrapRes.employees = employees;
         return wrapRes;
     }
 }

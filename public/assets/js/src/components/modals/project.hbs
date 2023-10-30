@@ -1,0 +1,41 @@
+{{~fetch '/departments/get/by/farm' | as 'res' }}
+
+<div class="modal modal--closed flex--a-start flex--j-center" id="new-project-modal">
+    <form class="modal__main card" {{submit "Project.add(event)"}}>
+        <div class="card__header flex flex--a-center flex--j-space-between">
+            <div>
+                <h1>New project.</h1>
+                <p>Add a new project</p>
+            </div>
+            <svg class="image--icon" {{click "Util.closeModal('new-project')"}}>
+                <use href="#cross"></use>
+            </svg>
+        </div>
+        <div class="card__body">
+			<div class="error-container hide" id="project-error">
+				<p></p>
+			</div>
+
+            <div class="input margin--top-1">
+                <input type="text" id="project-name" placeholder="Project name">
+            </div>
+            <div class="input margin--top-1">
+                <input type="text" id="project-objective" placeholder="Objective">
+            </div>
+			<div class="input margin--top-1">
+				<label class="input__label" for="project-department">Department</label>
+				<select name="" id="project-department">
+					<option value="select">Select</option>
+			
+					{{#each res.departments}}
+						<option value="{{this.name}}">{{this.name}}</option>
+					{{/each}}
+				</select>
+			</div>
+        </div>
+        <div class="card__footer">
+            <button class="btn btn--primary">Add project</button>
+            <button type="button" class="btn" {{click "Util.closeModal('new-project')"}}>Cancel</button>
+        </div>
+    </form>
+</div>

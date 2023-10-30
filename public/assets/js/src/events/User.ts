@@ -74,7 +74,7 @@ export default () => new (class User {
             closeModal('new-project-manager')
         }
 
-        // showError('auth', response.error)
+        showError('project-manager', response.error)
     }
 
     async addDepartmentManager (e: PointerEvent) {
@@ -94,7 +94,7 @@ export default () => new (class User {
             closeModal('new-department-manager')
         }
 
-        // showError('auth', response.error)
+        showError('department-manager', response.error)
     }
 
     async addDepartmentEmployee (e: PointerEvent) {
@@ -113,7 +113,7 @@ export default () => new (class User {
             closeModal('new-department-employee')
         }
 
-        // showError('auth', response.error)
+        showError('department-employee', response.error)
     }
 
     async removeUser (id) {

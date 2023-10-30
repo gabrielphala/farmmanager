@@ -24,6 +24,8 @@ export default () => new (class Task {
             
             return Refresh()
         }
+
+        showError('task', response.error);
     }
 
     async finish (task_id) {

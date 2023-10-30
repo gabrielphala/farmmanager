@@ -34,4 +34,10 @@ export default new (class User extends SQLifier {
             condition: { role: 'Employee', farm_id: farmId, isDeleted: false }
         });
     }
+
+    getDepartmentEmployeesByDepartment (farmId: number, department: string) {
+        return this.find({
+            condition: { role: 'Employee', department, farm_id: farmId, isDeleted: false }
+        });
+    }
 })

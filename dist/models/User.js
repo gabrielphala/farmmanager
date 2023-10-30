@@ -31,5 +31,10 @@ exports.default = new (class User extends sqlifier_1.SQLifier {
             condition: { role: 'Employee', farm_id: farmId, isDeleted: false }
         });
     }
+    getDepartmentEmployeesByDepartment(farmId, department) {
+        return this.find({
+            condition: { role: 'Employee', department, farm_id: farmId, isDeleted: false }
+        });
+    }
 });
 //# sourceMappingURL=User.js.map

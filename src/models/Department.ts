@@ -4,10 +4,10 @@ export default new (class Department extends SQLifier {
     constructor () {
         super();
 
-        this.schema('farm', {
+        this.schema('department', {
             id: { type: 'int', isAutoIncrement: true, isPrimary: true },
-            name: { type: 'varchar', length: 15 },
-            manager: { type: 'int', ref: 'User' }
+            farm_id: { type: 'int', ref: 'farm' },
+            name: { type: 'varchar', length: 15 }
         })
     }
 })

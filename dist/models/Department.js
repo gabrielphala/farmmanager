@@ -6,8 +6,9 @@ exports.default = new (class Department extends sqlifier_1.SQLifier {
         super();
         this.schema('department', {
             id: { type: 'int', isAutoIncrement: true, isPrimary: true },
+            farm_id: { type: 'int', ref: 'farm' },
             name: { type: 'varchar', length: 15 }
         });
     }
 });
-//# sourceMappingURL=Departments.js.map
+//# sourceMappingURL=Department.js.map

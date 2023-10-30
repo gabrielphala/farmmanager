@@ -1,7 +1,12 @@
 <header class="dash-header flex flex--a-center flex--j-space-between">
     <div class="dash-header__status">
         <p>Logged in as</p>
-        <h4>{{userDetails.role}}</h4>
+        <h4>
+            {{userDetails.role}}
+            {{#if userDetails.department}}
+                | {{userDetails.department}} department
+            {{/if}}
+        </h4>
     </div>
     <div class="dash-header__user">
         <h4>{{userDetails.fullname}}</h4>

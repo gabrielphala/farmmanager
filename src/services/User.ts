@@ -1,5 +1,6 @@
 import User from "../models/User"
 import Farm from "../models/Farm";
+import Department from "../models/Department";
 
 import v from "../helpers/Validation"
 import hasher from "../helpers/Hasher"
@@ -87,8 +88,8 @@ export default class UserServices {
             const { fullname, email } = body;
 
             v.validate({
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
 
             await User.insert({
@@ -111,9 +112,9 @@ export default class UserServices {
             const { department, fullname, email } = body;
 
             v.validate({
-                'Department name': { value: department, min: 5, max: 55 },
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'Department name': { value: department, min: 5, max: 60 },
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
 
             if ((await User.exists({ email })).found) throw `Email address: ${email} already exists`;
@@ -127,6 +128,13 @@ export default class UserServices {
                 farm_id: userInfo.farm_id,
                 password: await hasher.hash('Password123')
             })
+
+            if (!(await Department.exists({ name: department })).found) {
+                Department.insert({
+                    name: department,
+                    farm_id: userInfo.farm_id
+                })
+            }
 
             wrapRes.successful = true;
 
@@ -153,8 +161,8 @@ export default class UserServices {
             const { fullname, email } = body;
 
             v.validate({
-                'full name': { value: fullname, min: 5, max: 36 },
-                'email address': { value: email, min: 5, max: 46 }
+                'full name': { value: fullname, min: 5, max: 60 },
+                'email address': { value: email, min: 5, max: 60 }
             });
 
             if ((await User.exists({ email })).found) throw `Email address: ${email} already exists`;
@@ -180,7 +188,7 @@ export default class UserServices {
             const { email, password, role } = body;
 
             v.validate({
-                'email address': { value: email, min: 5, max: 46 },
+                'email address': { value: email, min: 5, max: 60 },
                 'password': { value: password, min: 8, max: 16 }
             });
 
@@ -233,7 +241,17 @@ export default class UserServices {
     }
 
     static async getDepartmentEmployees (wrapRes: IResponse, body: IAny, store: IAny) : Promise <IResponse> {
-        wrapRes.employees = await User.getDepartmentEmployees(store.userInfo.farm_id);
+        let employees;
+
+        if (!store.userInfo.department) {
+            employees = await User.getDepartmentEmployees(store.userInfo.farm_id);
+        }
+
+        else {
+            employees = await User.getDepartmentEmployeesByDepartment(store.userInfo.farm_id, store.userInfo.department);
+        }
+        
+        wrapRes.employees = employees;
 
         return wrapRes;
     }

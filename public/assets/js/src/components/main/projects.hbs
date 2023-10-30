@@ -1,0 +1,41 @@
+{{~scope 'projects'}}
+
+{{~fetch '/projects/get/by/farm' | as 'res' }}
+
+<div class="container__main__center">
+    <h4 class="container__main__center__title">Projects</h4>
+
+    <div class="card table">
+        <div class="table__header">
+            <ul class="table__header__row flex">
+                <li class="table__header__row__item short">#</li>
+                <li class="table__header__row__item">Project name</li>
+                <li class="table__header__row__item">Project objective</li>
+                <li class="table__header__row__item">Department</li>
+                <li class="table__header__row__item">Added on</li>
+            </ul>
+        </div>
+        <div class="table__body">
+            {{#each res.projects}}
+                <ul class="table__body__row flex">
+                    <li class="table__body__row__item short">{{index}}</li>
+                    <li class="table__body__row__item">{{this.name}}</li>
+                    <li class="table__body__row__item">{{this.objective}}</li>
+                    <li class="table__body__row__item">{{this.department}}</li>
+                    <li class="table__body__row__item">{{datetime this.createdOn}}</li>
+                </ul>
+            {{/each}}
+        </div>
+    </div>
+
+    {{#same userDetails.role 'Project manager'}}
+        <p class="margin--top-2 flex" style="cursor: pointer;" {{click "Util.openModal('new-project')" }}>
+            <svg class="image--icon margin--right-1">
+                <use href="#add"></use>
+            </svg>
+            <span>Add new project</span>
+        </p>
+    {{/same}}
+
+    {{component 'modals/project'}}
+</div>

@@ -11,10 +11,7 @@
                 <li class="table__header__row__item short">#</li>
                 <li class="table__header__row__item">Full name</li>
                 <li class="table__header__row__item">Email address</li>
-
-                {{#same userDetails.role 'Project manager'}}
-                    <li class="table__body__row__item">Department</li>
-                {{/same}}
+                <li class="table__header__row__item">Department</li>
 
                 <li class="table__header__row__item">Added on</li>
 
@@ -29,10 +26,7 @@
                     <li class="table__body__row__item short">{{index}}</li>
                     <li class="table__body__row__item">{{this.fullname}}</li>
                     <li class="table__body__row__item">{{this.email}}</li>
-
-                    {{#same userDetails.role 'Project manager'}}
-                        <li class="table__body__row__item">{{this.department}}</li>
-                    {{/same}}
+                    <li class="table__body__row__item">{{this.department}}</li>
 
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
                 

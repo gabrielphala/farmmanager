@@ -4,15 +4,18 @@ const sqlifier_1 = require("sqlifier");
 exports.default = new (class User extends sqlifier_1.SQLifier {
     constructor() {
         super();
-        this.schema('task', {
+        this.schema('project', {
             id: { type: 'int', isAutoIncrement: true, isPrimary: true },
-            lead_employee_id: { type: 'int', ref: 'user' },
             farm_id: { type: 'int', ref: 'farm' },
+            name: { type: 'varchar', length: 60 },
+            department: { type: 'varchar', length: 60 },
             objective: { type: 'varchar', length: 136 },
-            progress: { type: 'varchar', length: 50, default: 'pending' },
+            tasks_no: { type: 'int', default: 0 },
+            tasks_completed_no: { type: 'int', default: 0 },
+            status: { type: 'varchar', length: 50, default: 'pending' },
             createdOn: { type: 'datetime', default: sqlifier_1.SQLDate.now },
             isDeleted: { type: 'boolean', default: false }
         });
     }
 });
-//# sourceMappingURL=Task.js.map
+//# sourceMappingURL=Project.js.map

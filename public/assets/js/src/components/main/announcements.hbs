@@ -13,9 +13,10 @@
                     <h4>{{this.fullname}} ({{this.role}})</h4>
                     <p>{{this.subject}}</p>
                     <p>{{this.message}}</p>
+                    <p style="cursor: pointer; color: #6C63FF;" {{click "Announcement.remove('<<this.id>>')" }}>Remove</p>
                 </div>
                 <div class="pos--abs" style="right: 1rem; top: 1rem;">
-                    <p style="cursor: pointer;"  {{click "Announcement.remove('<<this.id>>')"}}>Remove</p>
+                    <p>{{datetime this.createdOn}}</p>
                 </div>
             </div>
         {{/each}}

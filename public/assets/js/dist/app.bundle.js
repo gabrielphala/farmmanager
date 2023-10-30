@@ -81,6 +81,45 @@ exports["default"] = () => new (class Announcement {
 
 /***/ }),
 
+/***/ "./public/assets/js/src/events/Project.ts":
+/*!************************************************!*\
+  !*** ./public/assets/js/src/events/Project.ts ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
+const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
+const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
+const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
+exports["default"] = () => new (class Project {
+    constructor() {
+        new oddlyjs_1.Events(this);
+    }
+    async add(e) {
+        e.preventDefault();
+        const response = await (0, fetch_1.default)('/project/add', {
+            body: {
+                name: $('#project-name').val(),
+                objective: $('#project-objective').val(),
+                department: $('#project-department').val()
+            }
+        });
+        if (response.successful) {
+            (0, modal_1.closeModal)('new-project');
+            return (0, oddlyjs_1.Refresh)();
+        }
+        (0, error_container_1.showError)('project', response.error);
+    }
+});
+
+
+/***/ }),
+
 /***/ "./public/assets/js/src/events/Task.ts":
 /*!*********************************************!*\
   !*** ./public/assets/js/src/events/Task.ts ***!
@@ -93,6 +132,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
+const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
 const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
 const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
 exports["default"] = () => new (class Task {
@@ -111,6 +151,7 @@ exports["default"] = () => new (class Task {
             (0, modal_1.closeModal)('new-task');
             return (0, oddlyjs_1.Refresh)();
         }
+        (0, error_container_1.showError)('task', response.error);
     }
     async finish(task_id) {
         const response = await (0, fetch_1.default)('/task/finish', {
@@ -204,11 +245,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const user_1 = __importDefault(__webpack_require__(/*! ./user */ "./public/assets/js/src/events/user.ts"));
 const Task_1 = __importDefault(__webpack_require__(/*! ./Task */ "./public/assets/js/src/events/Task.ts"));
 const Util_1 = __importDefault(__webpack_require__(/*! ./Util */ "./public/assets/js/src/events/Util.ts"));
+const Project_1 = __importDefault(__webpack_require__(/*! ./Project */ "./public/assets/js/src/events/Project.ts"));
 const Announcement_1 = __importDefault(__webpack_require__(/*! ./Announcement */ "./public/assets/js/src/events/Announcement.ts"));
 exports["default"] = () => {
     (0, user_1.default)();
     (0, Task_1.default)();
     (0, Util_1.default)();
+    (0, Project_1.default)();
     (0, Announcement_1.default)();
 };
 
@@ -281,7 +324,7 @@ exports["default"] = () => new (class User {
             (0, oddlyjs_1.Refresh)();
             (0, modal_1.closeModal)('new-project-manager');
         }
-        // showError('auth', response.error)
+        (0, error_container_1.showError)('project-manager', response.error);
     }
     async addDepartmentManager(e) {
         e.preventDefault();
@@ -296,7 +339,7 @@ exports["default"] = () => new (class User {
             (0, oddlyjs_1.Refresh)();
             (0, modal_1.closeModal)('new-department-manager');
         }
-        // showError('auth', response.error)
+        (0, error_container_1.showError)('department-manager', response.error);
     }
     async addDepartmentEmployee(e) {
         e.preventDefault();
@@ -310,7 +353,7 @@ exports["default"] = () => new (class User {
             (0, oddlyjs_1.Refresh)();
             (0, modal_1.closeModal)('new-department-employee');
         }
-        // showError('auth', response.error)
+        (0, error_container_1.showError)('department-employee', response.error);
     }
     async removeUser(id) {
         const response = await (0, fetch_1.default)('/user/remove', {
@@ -506,6 +549,11 @@ exports["default"] = () => {
     (0, oddlyjs_1.Route)({
         name: 'task.manager',
         url: '/task-manager',
+        layoutpath: 'info'
+    });
+    (0, oddlyjs_1.Route)({
+        name: 'projects',
+        url: '/projects',
         layoutpath: 'info'
     });
     (0, oddlyjs_1.Route)({

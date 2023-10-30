@@ -14,6 +14,7 @@ exports.default = (app) => {
     app.get('/department-managers', middleware_1.isUserOwnerOrProjectManager, base_1.default.render('Departments'));
     app.get('/employees', middleware_1.isNotEmployee, base_1.default.render('Employees'));
     app.get('/task-manager', middleware_1.isDepartmentManagerOrEmployee, base_1.default.render('Task manager'));
+    app.get('/projects', middleware_1.isDepartmentManagerOrEmployee, base_1.default.render('Projects'));
     app.get('/announcements', base_1.default.render('Announcements'));
     app.get('/switch-ownership', base_1.default.render('Switch ownership'));
     app.post('/user/add/project-manager', base_1.default.wrap_with_store(User_1.default.addProjectManager));
