@@ -1,4 +1,5 @@
 {{~fetch '/users/get/department-employees/by/farm' | as 'res' }}
+{{~fetch '/projects/get/by/department' | as 'res2' }}
 
 <div class="modal modal--closed flex--a-start flex--j-center" id="new-task-modal">
     <form class="modal__main card" {{submit "Task.add(event)" }}>
@@ -26,6 +27,16 @@
 
                     {{#each res.employees}}
                         <option value="{{this.id}}">{{this.fullname}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="input margin--top-1">
+                <label class="input__label" for="task-project-id">Project</label>
+                <select name="" id="task-project-id">
+                    <option value="select">Select</option>
+            
+                    {{#each res2.projects}}
+                        <option value="{{this.id}}">{{this.name}}</option>
                     {{/each}}
                 </select>
             </div>

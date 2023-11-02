@@ -27,7 +27,7 @@
                     <li class="table__body__row__item">{{this.role}}</li>
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
                     {{#same userDetails.role 'Owner'}}
-                        <li class="table__body__row__item" style="cursor: pointer;" {{click "User.removeUser('<<this.id>>')"}}>Remove</li>
+                        <li class="table__body__row__item" style="cursor: pointer;" {{click "User.removeUser('<<this.id>>', 'Project manager')"}}>Remove</li>
                     {{/same}}
                 </ul>
             {{/each}}

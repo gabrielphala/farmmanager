@@ -38,4 +38,15 @@ export default class ProjectServices {
 
         return wrapRes;
     }
+
+    static async getAllByDepartment (wrapRes: IResponse, body: IAny, { userInfo }: IAny) {
+        wrapRes.projects = await Project.find({
+            condition: {
+                farm_id: userInfo.farm_id,
+                department: userInfo.department
+            }
+        })
+
+        return wrapRes;
+    }
 };

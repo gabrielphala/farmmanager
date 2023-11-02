@@ -10,7 +10,7 @@
             <div class="announcements__item flex pos--rel">
                 <div class="announcements__item__profile image--round image--back margin--right-1" style="background-image: url('/assets/uploads/profiles/blank.jpg');"></div>
                 <div class="announcements__item__details">
-                    <h4>{{this.fullname}} ({{this.role}})</h4>
+                    <h4>{{this.fullname}} ({{this.sender_type}})</h4>
                     <p>{{this.subject}}</p>
                     <p>{{this.message}}</p>
                     <p style="cursor: pointer; color: #6C63FF;" {{click "Announcement.remove('<<this.id>>')" }}>Remove</p>

@@ -3,7 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_1 = __importDefault(require("../models/User"));
+const Owner_1 = __importDefault(require("../models/Owner"));
+const DepartmentManager_1 = __importDefault(require("../models/DepartmentManager"));
+const ProjectManager_1 = __importDefault(require("../models/ProjectManager"));
+const Employee_1 = __importDefault(require("../models/Employee"));
 const Farm_1 = __importDefault(require("../models/Farm"));
 const Department_1 = __importDefault(require("../models/Department"));
 const Validation_1 = __importDefault(require("../helpers/Validation"));
@@ -20,13 +23,12 @@ class UserServices {
                 'password': { value: password, min: 8, max: 16 },
                 'password again': { value: passwordAgain, is: ['password', 'Passwords do not match'] }
             });
-            if ((await User_1.default.exists({ email })).found)
+            if ((await Owner_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
             if ((await Farm_1.default.exists({ name: farmName })).found)
                 throw `Farm name: ${farmName} already exists`;
-            const ownerDetails = await User_1.default.insert({
+            const ownerDetails = await Owner_1.default.insert({
                 fullname,
-                role: 'Owner',
                 email,
                 password: await Hasher_1.default.hash(password)
             });
@@ -37,7 +39,7 @@ class UserServices {
             ownerDetails.farm_id = farmDetails.id;
             ownerDetails.save();
             delete ownerDetails.password;
-            let details = { ...ownerDetails.toObject(), ...farmDetails.toObject() };
+            let details = { ...ownerDetails.toObject(), ...farmDetails.toObject(), role: 'Owner' };
             const tokens = Jwt_1.default.get_cookie_tokens(details);
             wrapRes.set_cookie('fm_user', tokens);
             wrapRes.userDetails = details;
@@ -55,16 +57,15 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 36 },
                 'email address': { value: email, min: 5, max: 46 }
             });
-            if ((await User_1.default.exists({ email })).found)
+            if ((await Owner_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
-            const ownerDetails = await User_1.default.insert({
+            const ownerDetails = await Owner_1.default.insert({
                 farm_id: userInfo.farm_id,
                 fullname,
-                role: 'Owner',
                 email,
                 password: await Hasher_1.default.hash('Password123')
             });
-            User_1.default.update({ id: userInfo.id }, { isDeleted: true });
+            Owner_1.default.update({ id: userInfo.id }, { isDeleted: true });
             wrapRes.successful = true;
         }
         catch (e) {
@@ -79,9 +80,8 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
-            await User_1.default.insert({
+            await ProjectManager_1.default.insert({
                 fullname,
-                role: 'Project manager',
                 email,
                 farm_id: userInfo.farm_id,
                 password: await Hasher_1.default.hash('Password123')
@@ -101,13 +101,12 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
-            if ((await User_1.default.exists({ email })).found)
+            if ((await DepartmentManager_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
-            if ((await User_1.default.exists({ department, role: 'Department manager' })).found)
+            if ((await DepartmentManager_1.default.exists({ department })).found)
                 throw `Department on farm already added`;
-            await User_1.default.insert({
+            await DepartmentManager_1.default.insert({
                 fullname,
-                role: 'Department manager',
                 department,
                 email,
                 farm_id: userInfo.farm_id,
@@ -128,8 +127,14 @@ class UserServices {
     }
     static async removeFarmUser(wrapRes, body) {
         try {
-            const { userId } = body;
-            await User_1.default.update({ id: userId }, { isDeleted: true });
+            const { userId, role } = body;
+            const models = {
+                'Employee': Employee_1.default,
+                'Department manager': DepartmentManager_1.default,
+                'Project manager': ProjectManager_1.default,
+                'Owner': Owner_1.default
+            };
+            await models[role].update({ id: userId }, { isDeleted: true });
             wrapRes.successful = true;
         }
         catch (e) {
@@ -144,11 +149,10 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
-            if ((await User_1.default.exists({ email })).found)
+            if ((await Employee_1.default.exists({ email })).found)
                 throw `Email address: ${email} already exists`;
-            await User_1.default.insert({
+            await Employee_1.default.insert({
                 fullname,
-                role: 'Employee',
                 department: userInfo.department,
                 email,
                 farm_id: userInfo.farm_id,
@@ -164,12 +168,18 @@ class UserServices {
     static async signIn(wrapRes, body) {
         try {
             const { email, password, role } = body;
+            const models = {
+                'Employee': Employee_1.default,
+                'Department manager': DepartmentManager_1.default,
+                'Project manager': ProjectManager_1.default,
+                'Owner': Owner_1.default
+            };
             Validation_1.default.validate({
                 'email address': { value: email, min: 5, max: 60 },
                 'password': { value: password, min: 8, max: 16 }
             });
-            const userInfo = await User_1.default.findOne({
-                condition: { email, role, isDeleted: false },
+            const userInfo = await models[role].findOne({
+                condition: { email, isDeleted: false },
                 join: {
                     ref: 'farm',
                     id: 'farm_id'
@@ -179,11 +189,8 @@ class UserServices {
                 throw 'User does not exist';
             if (!(await Hasher_1.default.isSame(userInfo.password, password)))
                 throw 'Password incorrect';
-            const farmDetails = await Farm_1.default.findOne({
-                condition: { id: userInfo.farm_id }
-            });
             delete userInfo.password;
-            const tokens = Jwt_1.default.get_cookie_tokens(userInfo.toObject());
+            const tokens = Jwt_1.default.get_cookie_tokens({ ...userInfo.toObject(), role });
             wrapRes.set_cookie('fm_user', tokens);
             wrapRes.userDetails = userInfo.toObject();
             wrapRes.successful = true;
@@ -198,20 +205,20 @@ class UserServices {
         return wrapRes;
     }
     static async getProjectManagers(wrapRes, body, store) {
-        wrapRes.managers = await User_1.default.getProjectManagers(store.userInfo.farm_id);
+        wrapRes.managers = await ProjectManager_1.default.getProjectManagers(store.userInfo.farm_id);
         return wrapRes;
     }
     static async getDepartmentManagers(wrapRes, body, store) {
-        wrapRes.managers = await User_1.default.getDepartmentManagers(store.userInfo.farm_id);
+        wrapRes.managers = await DepartmentManager_1.default.getDepartmentManagers(store.userInfo.farm_id);
         return wrapRes;
     }
     static async getDepartmentEmployees(wrapRes, body, store) {
         let employees;
         if (!store.userInfo.department) {
-            employees = await User_1.default.getDepartmentEmployees(store.userInfo.farm_id);
+            employees = await Employee_1.default.getDepartmentEmployees(store.userInfo.farm_id);
         }
         else {
-            employees = await User_1.default.getDepartmentEmployeesByDepartment(store.userInfo.farm_id, store.userInfo.department);
+            employees = await Employee_1.default.getDepartmentEmployeesByDepartment(store.userInfo.farm_id, store.userInfo.department);
         }
         wrapRes.employees = employees;
         return wrapRes;

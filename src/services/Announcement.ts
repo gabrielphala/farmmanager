@@ -1,4 +1,8 @@
 import Announcement from "../models/Announcement"
+import Owner from "../models/Owner";
+import DepartmentManager from "../models/DepartmentManager";
+import ProjectManager from "../models/ProjectManager";
+import Employee from "../models/Employee"
 
 import v from "../helpers/Validation"
 
@@ -16,6 +20,7 @@ export default class AnnouncementServices {
 
             await Announcement.insert({
                 sender_id: userInfo.id,
+                sender_type: userInfo.role,
                 farm_id: userInfo.farm_id,
                 subject,
                 message
@@ -43,16 +48,31 @@ export default class AnnouncementServices {
 
     static async getByFarm (wrapRes: IResponse, _: IAny, { userInfo }: IAny) : Promise <IResponse> {
         try {
+            const models = {
+                'Employee': Employee,
+                'Department manager': DepartmentManager,
+                'Project manager': ProjectManager,
+                'Owner': Owner
+            }
+
             wrapRes.announcements = await Announcement.find({
                 condition: {
                     farm_id: userInfo.farm_id,
                     isDeleted: { $ne: true }
-                },
-                join: {
-                    ref: 'user',
-                    id: 'sender_id'
                 }
             })
+
+            for (let i = 0; i < wrapRes.announcements.length; i++) {
+                const announcement = wrapRes.announcements[i];
+
+                const details = await models[userInfo.role].findOne({
+                    condition: {
+                        id: announcement.sender_id
+                    }
+                })
+
+                wrapRes.announcements[i] = { ...announcement, ...details.toObject()};
+            }
 
             wrapRes.successful = true;
 

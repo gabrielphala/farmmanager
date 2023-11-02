@@ -8,5 +8,6 @@ const Project_1 = __importDefault(require("../../services/Project"));
 exports.default = (app) => {
     app.post('/project/add', base_1.default.wrap_with_store(Project_1.default.add));
     app.post('/projects/get/by/farm', base_1.default.wrap_with_store(Project_1.default.getAllByFarm));
+    app.post('/projects/get/by/department', base_1.default.wrap_with_store(Project_1.default.getAllByDepartment));
 };
 //# sourceMappingURL=project.js.map

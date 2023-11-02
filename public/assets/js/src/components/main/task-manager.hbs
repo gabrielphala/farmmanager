@@ -8,7 +8,8 @@
         <div class="table__header">
             <ul class="table__header__row flex">
                 <li class="table__header__row__item short">#</li>
-                <li class="table__header__row__item">Object</li>
+                <li class="table__header__row__item">Project</li>
+                <li class="table__header__row__item">Objective</li>
                 <li class="table__header__row__item">Lead (Reporting) Employee</li>
                 <li class="table__header__row__item">Progress</li>
                 <li class="table__header__row__item">Created on</li>
@@ -26,6 +27,7 @@
             {{#each res.tasks}}
                 <ul class="table__body__row flex">
                     <li class="table__body__row__item short">{{index}}</li>
+                    <li class="table__body__row__item">{{this.name}}</li>
                     <li class="table__body__row__item">{{this.objective}}</li>
                     <li class="table__body__row__item">{{this.fullname}}</li>
                     <li class="table__body__row__item">{{this.progress}}</li>
@@ -36,7 +38,15 @@
                     {{/same}}
 
                     {{#same userDetails.fullname this.fullname}}
-                        <li class="table__body__row__item" style="cursor: pointer;"  {{click "Task.finish('<<this.id>>')"}}>Mark as completed</li>
+                        {{#same this.progress 'pending'}}
+                            <li class="table__body__row__item" style="cursor: pointer;"  {{click "Task.start('<<this.id>>')"}}>Start task</li>
+                        {{/same}}
+                        {{#same this.progress 'ongoing'}}
+                            <li class="table__body__row__item" style="cursor: pointer;" {{click "Task.finish('<<this.id>>')" }}>Finish task</li>
+                        {{/same}}
+                        {{#same this.progress 'done'}}
+                            <li class="table__body__row__item" style="cursor: pointer;">No action</li>
+                        {{/same}}
                     {{else}}
                         {{#same userDetails.role 'Employee'}}
                             <li class="table__body__row__item">No action</li>

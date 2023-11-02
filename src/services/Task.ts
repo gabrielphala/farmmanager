@@ -1,26 +1,48 @@
+import Project from "../models/Project";
 import Task from "../models/Task"
 
 import v from "../helpers/Validation"
-import hasher from "../helpers/Hasher"
 
 import { IAny, IResponse } from "../interfaces";
 
 export default class TaskServices {
     static async add (wrapRes: IResponse, body: IAny, { userInfo }: IAny) : Promise <IResponse> {
         try {
-            const { objective, leadEmployeeId } = body;
+            const { objective, leadEmployeeId, projectId } = body;
             
             v.validate({
                 'Objective': { value: objective, min: 5, max: 136 }
             });
 
             if (leadEmployeeId == 'select') throw 'Please select employee';
+            if (projectId == 'select') throw 'Please select project';
 
             await Task.insert({
                 objective,
                 lead_employee_id: leadEmployeeId,
-                farm_id: userInfo.farm_id
+                farm_id: userInfo.farm_id,
+                project_id: projectId
             })
+
+            const project = await Project.findOne({ condition: { id: projectId } });
+
+            project.tasks_no++;
+            project.status = 'ongoing';
+
+            project.save();
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
+    static async start (wrapRes: IResponse, body: IAny) : Promise <IResponse> {
+        try {
+            const { task_id } = body;
+            
+            Task.update({ id: task_id }, { progress: 'ongoing' });
 
             wrapRes.successful = true;
 
@@ -33,7 +55,20 @@ export default class TaskServices {
         try {
             const { task_id } = body;
             
-            Task.update({ id: task_id }, { progress: 'done' });
+            const task = await Task.findOne({ condition: { id: task_id } });
+
+            task.progress = 'done';
+
+            task.save()
+
+            const project = await Project.findOne({ condition: { id: task.project_id } });
+
+            if (project.tasks_no == project.tasks_completed_no + 1) {
+                project.tasks_completed_no++;
+                project.status = 'done';
+
+                project.save()
+            }
 
             wrapRes.successful = true;
 
@@ -63,26 +98,39 @@ export default class TaskServices {
                         farm_id: userInfo.farm_id,
                         isDeleted: false
                     },
-                    join: {
-                        ref: 'user',
-                        id: 'lead_employee_id'
-                    }
+                    join: [
+                        {
+                            ref: 'employee',
+                            id: 'lead_employee_id'
+                        },
+                        {
+                            ref: 'project',
+                            id: 'project_id'
+                        },
+                    ]
                 })
 
             else {
+
                 wrapRes.tasks = await Task.find({
                     condition: {
                         farm_id: userInfo.farm_id,
                         isDeleted: false
                     },
-                    join: {
-                        ref: 'user',
-                        kind: 'right',
-                        condition: {
-                            'id': { $r: 'task.lead_employee_id' },
-                            'department': userInfo.department
-                        }
-                    }
+                    join: [
+                        {
+                            ref: 'employee',
+                            kind: 'right',
+                            condition: {
+                                'id': { $r: 'task.lead_employee_id' },
+                                'department': userInfo.department
+                            }
+                        },
+                        {
+                            ref: 'project',
+                            id: 'project_id'
+                        },
+                    ]
                 })
             }
 

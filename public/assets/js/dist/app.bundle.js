@@ -145,6 +145,7 @@ exports["default"] = () => new (class Task {
             body: {
                 objective: $('#task-objective').val(),
                 leadEmployeeId: $('#task-employee-id').val(),
+                projectId: $('#task-project-id').val(),
             }
         });
         if (response.successful) {
@@ -152,6 +153,16 @@ exports["default"] = () => new (class Task {
             return (0, oddlyjs_1.Refresh)();
         }
         (0, error_container_1.showError)('task', response.error);
+    }
+    async start(task_id) {
+        const response = await (0, fetch_1.default)('/task/start', {
+            body: {
+                task_id
+            }
+        });
+        if (response.successful) {
+            return (0, oddlyjs_1.Refresh)();
+        }
     }
     async finish(task_id) {
         const response = await (0, fetch_1.default)('/task/finish', {
@@ -355,10 +366,11 @@ exports["default"] = () => new (class User {
         }
         (0, error_container_1.showError)('department-employee', response.error);
     }
-    async removeUser(id) {
+    async removeUser(id, role) {
         const response = await (0, fetch_1.default)('/user/remove', {
             body: {
-                userId: id
+                userId: id,
+                role
             }
         });
         if (response.successful) {
@@ -825,7 +837,6 @@ class KoliEngine {
         }
         let renderedContent = '', elseBody = '';
         const hasElse = Utility_1.default.blockHasElse(block);
-        console.log(hasElse, block);
         if (hasElse) {
             const ifArray = sameBody.split('{{else}}');
             if (ifArray.length > 2)

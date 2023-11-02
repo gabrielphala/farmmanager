@@ -35,6 +35,15 @@ class ProjectServices {
         });
         return wrapRes;
     }
+    static async getAllByDepartment(wrapRes, body, { userInfo }) {
+        wrapRes.projects = await Project_1.default.find({
+            condition: {
+                farm_id: userInfo.farm_id,
+                department: userInfo.department
+            }
+        });
+        return wrapRes;
+    }
 }
 exports.default = ProjectServices;
 ;

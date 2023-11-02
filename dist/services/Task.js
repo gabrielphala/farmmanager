@@ -3,22 +3,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Project_1 = __importDefault(require("../models/Project"));
 const Task_1 = __importDefault(require("../models/Task"));
 const Validation_1 = __importDefault(require("../helpers/Validation"));
 class TaskServices {
     static async add(wrapRes, body, { userInfo }) {
         try {
-            const { objective, leadEmployeeId } = body;
+            const { objective, leadEmployeeId, projectId } = body;
             Validation_1.default.validate({
                 'Objective': { value: objective, min: 5, max: 136 }
             });
             if (leadEmployeeId == 'select')
                 throw 'Please select employee';
+            if (projectId == 'select')
+                throw 'Please select project';
             await Task_1.default.insert({
                 objective,
                 lead_employee_id: leadEmployeeId,
-                farm_id: userInfo.farm_id
+                farm_id: userInfo.farm_id,
+                project_id: projectId
             });
+            const project = await Project_1.default.findOne({ condition: { id: projectId } });
+            project.tasks_no++;
+            project.status = 'ongoing';
+            project.save();
+            wrapRes.successful = true;
+        }
+        catch (e) {
+            throw e;
+        }
+        return wrapRes;
+    }
+    static async start(wrapRes, body) {
+        try {
+            const { task_id } = body;
+            Task_1.default.update({ id: task_id }, { progress: 'ongoing' });
             wrapRes.successful = true;
         }
         catch (e) {
@@ -29,7 +48,15 @@ class TaskServices {
     static async finish(wrapRes, body) {
         try {
             const { task_id } = body;
-            Task_1.default.update({ id: task_id }, { progress: 'done' });
+            const task = await Task_1.default.findOne({ condition: { id: task_id } });
+            task.progress = 'done';
+            task.save();
+            const project = await Project_1.default.findOne({ condition: { id: task.project_id } });
+            if (project.tasks_no == project.tasks_completed_no + 1) {
+                project.tasks_completed_no++;
+                project.status = 'done';
+                project.save();
+            }
             wrapRes.successful = true;
         }
         catch (e) {
@@ -56,10 +83,16 @@ class TaskServices {
                         farm_id: userInfo.farm_id,
                         isDeleted: false
                     },
-                    join: {
-                        ref: 'user',
-                        id: 'lead_employee_id'
-                    }
+                    join: [
+                        {
+                            ref: 'employee',
+                            id: 'lead_employee_id'
+                        },
+                        {
+                            ref: 'project',
+                            id: 'project_id'
+                        },
+                    ]
                 });
             else {
                 wrapRes.tasks = await Task_1.default.find({
@@ -67,14 +100,20 @@ class TaskServices {
                         farm_id: userInfo.farm_id,
                         isDeleted: false
                     },
-                    join: {
-                        ref: 'user',
-                        kind: 'right',
-                        condition: {
-                            'id': { $r: 'task.lead_employee_id' },
-                            'department': userInfo.department
-                        }
-                    }
+                    join: [
+                        {
+                            ref: 'employee',
+                            kind: 'right',
+                            condition: {
+                                'id': { $r: 'task.lead_employee_id' },
+                                'department': userInfo.department
+                            }
+                        },
+                        {
+                            ref: 'project',
+                            id: 'project_id'
+                        },
+                    ]
                 });
             }
             wrapRes.successful = true;

@@ -116,10 +116,11 @@ export default () => new (class User {
         showError('department-employee', response.error)
     }
 
-    async removeUser (id) {
+    async removeUser (id, role) {
         const response = await fetch('/user/remove', {
             body: {
-                userId: id
+                userId: id,
+                role
             }
         })
 

@@ -7,6 +7,7 @@ const base_1 = __importDefault(require("../controllers/base"));
 const Task_1 = __importDefault(require("../../services/Task"));
 exports.default = (app) => {
     app.post('/task/add', base_1.default.wrap_with_store(Task_1.default.add));
+    app.post('/task/start', base_1.default.wrap(Task_1.default.start));
     app.post('/task/finish', base_1.default.wrap(Task_1.default.finish));
     app.post('/task/remove', base_1.default.wrap(Task_1.default.remove));
     app.post('/task/get/by/farm', base_1.default.wrap_with_store(Task_1.default.getByFarm));

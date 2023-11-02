@@ -16,6 +16,7 @@ export default () => new (class Task {
             body: {
                 objective: $('#task-objective').val(),
                 leadEmployeeId: $('#task-employee-id').val(),
+                projectId: $('#task-project-id').val(),
             }
         })
 
@@ -26,6 +27,18 @@ export default () => new (class Task {
         }
 
         showError('task', response.error);
+    }
+
+    async start (task_id) {
+        const response = await fetch('/task/start', {
+            body: {
+                task_id
+            }
+        })
+
+        if (response.successful){
+            return Refresh()
+        }
     }
 
     async finish (task_id) {

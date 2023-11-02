@@ -1,43 +1,30 @@
 import { SQLifier, SQLDate } from "sqlifier"
 
-export default new (class User extends SQLifier {
+export default new (class Employee extends SQLifier {
     constructor () {
         super();
 
-        this.schema('user', {
+        this.schema('employee', {
             id: { type: 'int', isAutoIncrement: true, isPrimary: true },
             farm_id: { type: 'int' },
             department: { type: 'varchar', length: 55 },
             fullname: { type: 'varchar', length: 55 },
             email: { type: 'varchar', length: 50 },
-            role: { type: 'varchar', length: 30 },
             password: { type: 'varchar', length: 250 },
             createdOn: { type: 'datetime', default: SQLDate.now },
             isDeleted: { type: 'boolean', default: false }
         })
     }
 
-    getProjectManagers (farmId: number) {
+	getDepartmentEmployees (farmId: number) {
         return this.find({
-            condition:  { role: 'Project manager', farm_id: farmId, isDeleted: false }
-        });
-    }
-
-    getDepartmentManagers (farmId: number) {
-        return this.find({
-            condition: { role: 'Department manager', farm_id: farmId, isDeleted: false }
-        });
-    }
-
-    getDepartmentEmployees (farmId: number) {
-        return this.find({
-            condition: { role: 'Employee', farm_id: farmId, isDeleted: false }
+            condition: { farm_id: farmId, isDeleted: false }
         });
     }
 
     getDepartmentEmployeesByDepartment (farmId: number, department: string) {
         return this.find({
-            condition: { role: 'Employee', department, farm_id: farmId, isDeleted: false }
+            condition: { department, farm_id: farmId, isDeleted: false }
         });
     }
 })
