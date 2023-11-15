@@ -119,7 +119,7 @@ export default class UserServices {
             });
 
             if ((await DepartmentManager.exists({ email })).found) throw `Email address: ${email} already exists`;
-            if ((await DepartmentManager.exists({ department })).found) throw `Department on farm already added`;
+            if ((await DepartmentManager.exists({ department, farm_id: userInfo.farm_id })).found) throw `Department on farm already added`;
 
             await DepartmentManager.insert({
                 fullname,
@@ -129,7 +129,7 @@ export default class UserServices {
                 password: await hasher.hash('Password123')
             })
 
-            if (!(await Department.exists({ name: department })).found) {
+            if (!(await Department.exists({ name: department, farm_id: userInfo.farm_id })).found) {
                 Department.insert({
                     name: department,
                     farm_id: userInfo.farm_id
