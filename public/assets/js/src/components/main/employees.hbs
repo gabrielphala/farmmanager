@@ -1,9 +1,11 @@
 {{~scope 'employees'}}
 
 {{~fetch '/users/get/department-employees/by/farm' | as 'res' }}
+{{~ json res.employees | as 'employeess'}}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Employees</h4>
+    <p {{click "User.downloadEmployeesCSV(event)" }} data-employees='{{employeess}}' style="cursor: pointer;">Download CSV report</p>
 
     <div class="card table">
         <div class="table__header">
@@ -48,6 +50,8 @@
             <span>Add department employee</span>
         </p>
     {{/same}}
+
+    <a download id="download-anchor"></a>
 
     {{component 'modals/department-employee'}}
 </div>

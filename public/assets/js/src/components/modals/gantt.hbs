@@ -1,0 +1,19 @@
+{{~fetch '/departments/get/by/farm' | as 'res' }}
+
+<div class="modal modal--closed flex--a-start flex--j-center" id="gantt-modal">
+  <form class="modal__main card" {{submit "Project.add(event)" }}>
+    <div class="card__header flex flex--a-center flex--j-space-between">
+      <div>
+        <h1>Gantt chart</h1>
+        <p>view gantt chart</p>
+      </div>
+      <svg class="image--icon" {{click "Util.closeModal('gantt')" }}>
+        <use href="#cross"></use>
+      </svg>
+    </div>
+    <div class="card__body" id="gantt"></div>
+    <div class="card__footer">
+      <button type="button" class="btn" {{click "Util.closeModal('gantt')" }}>Cancel</button>
+    </div>
+  </form>
+</div>

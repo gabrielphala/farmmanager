@@ -1,9 +1,11 @@
 {{~scope 'department.managers'}}
 
 {{~fetch '/users/get/department-managers/by/farm' | as 'res' }}
+{{~ json res.managers | as 'managerss'}}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Department Managers</h4>
+    <p {{click "User.downloadDepartmentManagersCSV(event)" }} data-managers='{{managerss}}' style="cursor: pointer;">Download CSV report</p>
 
     <div class="card table">
         <div class="table__header">
@@ -46,6 +48,8 @@
             <span>Add department manager</span>
         </p>
     {{/same}}
+
+    <a download id="download-anchor"></a>
 
     {{component 'modals/department-manager'}}
 </div>

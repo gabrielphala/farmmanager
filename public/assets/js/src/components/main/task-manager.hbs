@@ -1,8 +1,10 @@
 {{~scope 'task.manager'}}
 {{~fetch '/task/get/by/farm' | as 'res' }}
+{{~ json res.tasks | as 'taskss'}}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Task manager</h4>
+    <p {{click "Task.downloadCSV(event)" }} data-tasks='{{taskss}}' style="cursor: pointer;">Download CSV report</p>
 
     <div class="card table">
         <div class="table__header">
@@ -65,6 +67,8 @@
             <span>Add task</span>
         </p>
     {{/same}}
+
+    <a download id="download-anchor"></a>
 
     {{component 'modals/task'}}
 </div>

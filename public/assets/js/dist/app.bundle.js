@@ -96,6 +96,12 @@ const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
 const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
 const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
 const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
+let tableHeader = [
+    '#', 'Project name', 'Project objective', 'Department', 'Progress (status)'
+];
+let allowedColumns = [
+    'name', 'objective', 'department', 'status'
+];
 exports["default"] = () => new (class Project {
     constructor() {
         new oddlyjs_1.Events(this);
@@ -114,6 +120,44 @@ exports["default"] = () => new (class Project {
             return (0, oddlyjs_1.Refresh)();
         }
         (0, error_container_1.showError)('project', response.error);
+    }
+    async viewGantt(project_id) {
+        const response = await (0, fetch_1.default)('/tasks/get/by/project', {
+            body: {
+                project_id
+            }
+        });
+        var tasks = [];
+        response.tasks.forEach(task => {
+            if (task.startedOn && task.finishedOn)
+                tasks.push({
+                    id: task.id,
+                    name: task.objective,
+                    start: task.startedOn,
+                    end: task.finishedOn,
+                    progress: 20,
+                    dependencies: '',
+                    custom_class: 'bar-milestone' // optional
+                });
+        });
+        var gantt = new Gantt("#gantt", tasks);
+        (0, modal_1.openModal)('gantt');
+    }
+    async downloadCSV(e) {
+        const projects = e.currentTarget.dataset.projects;
+        const response = await (0, fetch_1.default)('/download/csv', {
+            body: {
+                data: JSON.parse(projects),
+                tableHeader,
+                allowedColumns,
+                reportName: 'Projects'
+            }
+        });
+        if (response.successful) {
+            const anchor = $('#download-anchor');
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`);
+            anchor[0].click();
+        }
     }
 });
 
@@ -135,6 +179,12 @@ const oddlyjs_1 = __webpack_require__(/*! oddlyjs */ "../oddlyjs/index.ts");
 const error_container_1 = __webpack_require__(/*! ../helpers/error-container */ "./public/assets/js/src/helpers/error-container.ts");
 const modal_1 = __webpack_require__(/*! ../helpers/modal */ "./public/assets/js/src/helpers/modal.ts");
 const fetch_1 = __importDefault(__webpack_require__(/*! ../helpers/fetch */ "./public/assets/js/src/helpers/fetch.ts"));
+let tableHeader = [
+    '#', 'Project', 'Objective', 'Lead (Reporting) Employee', 'Progress'
+];
+let allowedColumns = [
+    'name', 'objective', 'fullname', 'progress'
+];
 exports["default"] = () => new (class Task {
     constructor() {
         new oddlyjs_1.Events(this);
@@ -182,6 +232,22 @@ exports["default"] = () => new (class Task {
         });
         if (response.successful) {
             return (0, oddlyjs_1.Refresh)();
+        }
+    }
+    async downloadCSV(e) {
+        const tasks = e.currentTarget.dataset.tasks;
+        const response = await (0, fetch_1.default)('/download/csv', {
+            body: {
+                data: JSON.parse(tasks),
+                tableHeader,
+                allowedColumns,
+                reportName: 'Tasks'
+            }
+        });
+        if (response.successful) {
+            const anchor = $('#download-anchor');
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`);
+            anchor[0].click();
         }
     }
 });
@@ -401,6 +467,72 @@ exports["default"] = () => new (class User {
     selectAccountType(e) {
         $('.auth__main__form__account-selection__active').removeClass('auth__main__form__account-selection__active');
         $(e.currentTarget).addClass('auth__main__form__account-selection__active');
+    }
+    async downloadProjectManagersCSV(e) {
+        const managers = e.currentTarget.dataset.managers;
+        let tableHeader = [
+            '#', 'Full name', 'Email address'
+        ];
+        let allowedColumns = [
+            'fullname', 'email'
+        ];
+        const response = await (0, fetch_1.default)('/download/csv', {
+            body: {
+                data: JSON.parse(managers),
+                tableHeader,
+                allowedColumns,
+                reportName: 'Cart'
+            }
+        });
+        if (response.successful) {
+            const anchor = $('#download-anchor');
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`);
+            anchor[0].click();
+        }
+    }
+    async downloadDepartmentManagersCSV(e) {
+        const managers = e.currentTarget.dataset.managers;
+        let tableHeader = [
+            '#', 'Full name', 'Email address', 'Department'
+        ];
+        let allowedColumns = [
+            'fullname', 'email', 'department'
+        ];
+        const response = await (0, fetch_1.default)('/download/csv', {
+            body: {
+                data: JSON.parse(managers),
+                tableHeader,
+                allowedColumns,
+                reportName: 'Cart'
+            }
+        });
+        if (response.successful) {
+            const anchor = $('#download-anchor');
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`);
+            anchor[0].click();
+        }
+    }
+    async downloadEmployeesCSV(e) {
+        const employees = e.currentTarget.dataset.employees;
+        let tableHeader = [
+            '#', 'Full name', 'Email address', 'Department'
+        ];
+        let allowedColumns = [
+            'fullname', 'email', 'department'
+        ];
+        const response = await (0, fetch_1.default)('/download/csv', {
+            body: {
+                data: JSON.parse(employees),
+                tableHeader,
+                allowedColumns,
+                reportName: 'Employees'
+            }
+        });
+        if (response.successful) {
+            const anchor = $('#download-anchor');
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`);
+            anchor[0].click();
+        }
     }
 });
 
@@ -983,7 +1115,8 @@ class KoliHelpers {
         signal: this.signal,
         datetime: this.datetime,
         readheader: this.readheader,
-        minus: this.minus
+        minus: this.minus,
+        json: this.json
     };
     _userDefinedHelpers = [];
     _terminatorHelpers = [];
@@ -1077,6 +1210,9 @@ class KoliHelpers {
             res.push(arg.value);
         });
         return res.join(' ');
+    }
+    json(arg) {
+        return JSON.stringify(arg.value);
     }
     minus(...args) {
         if (args.length < 2)

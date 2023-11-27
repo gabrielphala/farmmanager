@@ -1,9 +1,11 @@
 {{~scope 'project.managers'}}
 
 {{~fetch '/users/get/project-managers/by/farm' | as 'res' }}
+{{~ json res.managers | as 'managerss'}}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Project managers</h4>
+    <p {{click "User.downloadProjectManagersCSV(event)" }} data-managers='{{managerss}}' style="cursor: pointer;">Download CSV report</p>
 
     <div class="card table">
         <div class="table__header">
@@ -11,7 +13,6 @@
                 <li class="table__header__row__item short">#</li>
                 <li class="table__header__row__item">Full name</li>
                 <li class="table__header__row__item">Email address</li>
-                <li class="table__header__row__item">Role</li>
                 <li class="table__header__row__item">Added on</li>
                 {{#same userDetails.role 'Owner'}}
                     <li class="table__header__row__item">...</li>
@@ -24,7 +25,6 @@
                     <li class="table__body__row__item short">{{index}}</li>
                     <li class="table__body__row__item">{{this.fullname}}</li>
                     <li class="table__body__row__item">{{this.email}}</li>
-                    <li class="table__body__row__item">{{this.role}}</li>
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
                     {{#same userDetails.role 'Owner'}}
                         <li class="table__body__row__item" style="cursor: pointer;" {{click "User.removeUser('<<this.id>>', 'Project manager')"}}>Remove</li>
@@ -42,6 +42,8 @@
             <span>Add project manager</span>
         </p>
     {{/same}}
+
+    <a download id="download-anchor"></a>
 
     {{component 'modals/project-manager'}}
 </div>

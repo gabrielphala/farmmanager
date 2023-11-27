@@ -1,9 +1,12 @@
 {{~scope 'projects'}}
 
 {{~fetch '/projects/get/by/farm' | as 'res' }}
+{{~ json res.projects | as 'projectss'}}
 
 <div class="container__main__center">
     <h4 class="container__main__center__title">Projects</h4>
+    <p {{click "Project.downloadCSV(event)" }} data-projects='{{projectss}}' style="cursor: pointer;">Download CSV report</p>
+
 
     <div class="card table">
         <div class="table__header">
@@ -12,7 +15,9 @@
                 <li class="table__header__row__item">Project name</li>
                 <li class="table__header__row__item">Project objective</li>
                 <li class="table__header__row__item">Department</li>
+                <li class="table__header__row__item">Progress (status)</li>
                 <li class="table__header__row__item">Added on</li>
+                <li class="table__header__row__item">...</li>
             </ul>
         </div>
         <div class="table__body">
@@ -22,7 +27,9 @@
                     <li class="table__body__row__item">{{this.name}}</li>
                     <li class="table__body__row__item">{{this.objective}}</li>
                     <li class="table__body__row__item">{{this.department}}</li>
+                    <li class="table__body__row__item">{{this.status}}</li>
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
+                    <li style="cursor: pointer;" class="table__body__row__item" {{ click "Project.viewGantt('<<this.id>>')" }}>view gantt chart</li>
                 </ul>
             {{/each}}
         </div>
@@ -37,5 +44,8 @@
         </p>
     {{/same}}
 
+    <a download id="download-anchor"></a>
+
     {{component 'modals/project'}}
+    {{component 'modals/gantt'}}
 </div>

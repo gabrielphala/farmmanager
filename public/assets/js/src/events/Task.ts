@@ -4,6 +4,14 @@ import { showError } from "../helpers/error-container";
 import { closeModal } from "../helpers/modal";
 import fetch from "../helpers/fetch";
 
+let tableHeader = [
+    '#', 'Project', 'Objective', 'Lead (Reporting) Employee', 'Progress'
+]
+
+let allowedColumns = [
+    'name', 'objective', 'fullname', 'progress'
+]
+
 export default () => new (class Task {
     constructor () {
         new Events(this)
@@ -62,6 +70,27 @@ export default () => new (class Task {
 
         if (response.successful){
             return Refresh()
+        }
+    }
+
+    async downloadCSV (e: PointerEvent) {
+        const tasks = (e.currentTarget as HTMLElement).dataset.tasks as string;
+
+        const response = await fetch('/download/csv', {
+            body: {
+                data: JSON.parse(tasks),
+                tableHeader,
+                allowedColumns,
+				reportName: 'Tasks'
+            }
+        });
+
+        if (response.successful) {
+            const anchor = $('#download-anchor')
+
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`)
+
+            anchor[0].click();
         }
     }
 });

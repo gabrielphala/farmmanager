@@ -11,5 +11,6 @@ exports.default = (app) => {
     app.post('/task/finish', base_1.default.wrap(Task_1.default.finish));
     app.post('/task/remove', base_1.default.wrap(Task_1.default.remove));
     app.post('/task/get/by/farm', base_1.default.wrap_with_store(Task_1.default.getByFarm));
+    app.post('/tasks/get/by/project', base_1.default.wrap_with_store(Task_1.default.getByProject));
 };
 //# sourceMappingURL=task.js.map

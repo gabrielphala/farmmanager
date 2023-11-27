@@ -161,4 +161,91 @@ export default () => new (class User {
 
         $(e.currentTarget as HTMLElement).addClass('auth__main__form__account-selection__active')
     }
+
+    async downloadProjectManagersCSV (e: PointerEvent) {
+        const managers = (e.currentTarget as HTMLElement).dataset.managers as string;
+
+        let tableHeader = [
+            '#', 'Full name', 'Email address'
+        ]
+
+        let allowedColumns = [
+            'fullname', 'email'
+        ]
+
+        const response = await fetch('/download/csv', {
+            body: {
+                data: JSON.parse(managers),
+                tableHeader,
+                allowedColumns,
+				reportName: 'A_Project_Managers'
+            }
+        });
+
+        if (response.successful) {
+            const anchor = $('#download-anchor')
+
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`)
+
+            anchor[0].click();
+        }
+    }
+
+    async downloadDepartmentManagersCSV (e: PointerEvent) {
+        const managers = (e.currentTarget as HTMLElement).dataset.managers as string;
+
+        let tableHeader = [
+            '#', 'Full name', 'Email address', 'Department'
+        ]
+
+        let allowedColumns = [
+            'fullname', 'email', 'department'
+        ]
+
+        const response = await fetch('/download/csv', {
+            body: {
+                data: JSON.parse(managers),
+                tableHeader,
+                allowedColumns,
+				reportName: 'Department_Managers'
+            }
+        });
+
+        if (response.successful) {
+            const anchor = $('#download-anchor')
+
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`)
+
+            anchor[0].click();
+        }
+    }
+
+    async downloadEmployeesCSV (e: PointerEvent) {
+        const employees = (e.currentTarget as HTMLElement).dataset.employees as string;
+
+        let tableHeader = [
+            '#', 'Full name', 'Email address', 'Department'
+        ]
+
+        let allowedColumns = [
+            'fullname', 'email', 'department'
+        ]
+
+        const response = await fetch('/download/csv', {
+            body: {
+                data: JSON.parse(employees),
+                tableHeader,
+                allowedColumns,
+				reportName: 'Employees'
+            }
+        });
+
+        if (response.successful) {
+            const anchor = $('#download-anchor')
+
+            anchor.attr('href', `/assets/downloads/tmp/${response.filename}`)
+
+            anchor[0].click();
+        }
+    }
 });

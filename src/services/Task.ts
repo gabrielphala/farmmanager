@@ -4,6 +4,7 @@ import Task from "../models/Task"
 import v from "../helpers/Validation"
 
 import { IAny, IResponse } from "../interfaces";
+import { SQLDate } from "sqlifier";
 
 export default class TaskServices {
     static async add (wrapRes: IResponse, body: IAny, { userInfo }: IAny) : Promise <IResponse> {
@@ -42,7 +43,7 @@ export default class TaskServices {
         try {
             const { task_id } = body;
             
-            Task.update({ id: task_id }, { progress: 'ongoing' });
+            Task.update({ id: task_id }, { progress: 'ongoing', startedOn: SQLDate.toSQLDatetime(new Date()) });
 
             wrapRes.successful = true;
 
@@ -58,6 +59,7 @@ export default class TaskServices {
             const task = await Task.findOne({ condition: { id: task_id } });
 
             task.progress = 'done';
+            task.finishedOn = SQLDate.toSQLDatetime(new Date());
 
             task.save()
 
@@ -133,6 +135,33 @@ export default class TaskServices {
                     ]
                 })
             }
+
+            wrapRes.successful = true;
+
+        } catch (e) { throw e; }
+
+        return wrapRes;
+    }
+
+    static async getByProject (wrapRes: IResponse, body: IAny) : Promise <IResponse> {
+        try {
+            wrapRes.tasks = await Task.find({
+                condition: {
+                    project_id: body.project_id,
+                    isDeleted: false
+                },
+                join: [
+                    {
+                        ref: 'employee',
+                        id: 'lead_employee_id'
+                    },
+                    {
+                        ref: 'project',
+                        id: 'project_id'
+                    },
+                ]
+            })
+
 
             wrapRes.successful = true;
 
