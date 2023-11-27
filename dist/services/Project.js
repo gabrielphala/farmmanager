@@ -39,7 +39,6 @@ class ProjectServices {
         wrapRes.projects = await Project_1.default.find({
             condition: {
                 farm_id: userInfo.farm_id,
-                department: userInfo.department
             }
         });
         return wrapRes;
