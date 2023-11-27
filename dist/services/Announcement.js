@@ -58,7 +58,8 @@ class AnnouncementServices {
             });
             for (let i = 0; i < wrapRes.announcements.length; i++) {
                 const announcement = wrapRes.announcements[i];
-                const details = await models[userInfo.role].findOne({
+                console.log(announcement, models[userInfo.role]);
+                const details = await models[announcement.sender_type].findOne({
                     condition: {
                         id: announcement.sender_id
                     }

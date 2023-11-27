@@ -481,7 +481,7 @@ exports["default"] = () => new (class User {
                 data: JSON.parse(managers),
                 tableHeader,
                 allowedColumns,
-                reportName: 'Cart'
+                reportName: 'A_Project_Managers'
             }
         });
         if (response.successful) {
@@ -503,7 +503,7 @@ exports["default"] = () => new (class User {
                 data: JSON.parse(managers),
                 tableHeader,
                 allowedColumns,
-                reportName: 'Cart'
+                reportName: 'Department_Managers'
             }
         });
         if (response.successful) {
