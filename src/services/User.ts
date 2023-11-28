@@ -5,6 +5,7 @@ import Employee from "../models/Employee";
 
 import Farm from "../models/Farm";
 import Department from "../models/Department";
+import Project from "../models/Project";
 
 import v from "../helpers/Validation"
 import hasher from "../helpers/Hasher"
@@ -94,6 +95,8 @@ export default class UserServices {
                 'email address': { value: email, min: 5, max: 60 }
             });
 
+            if (!(await Project.exists({ farm_id: userInfo.farm_id })).found) throw 'No projects found'
+
             await ProjectManager.insert({
                 fullname,
                 email,
@@ -172,7 +175,8 @@ export default class UserServices {
                 'email address': { value: email, min: 5, max: 60 }
             });
 
-            if ((await Employee.exists({ email })).found) throw `Email address: ${email} already exists`;
+            if ((await Employee.exists({ email: email.trim().toLowerCase() })).found) throw `Email address: ${email} already exists`;
+            if ((await Employee.exists({ fullname: fullname.trim().toLowerCase() })).found) throw `Full name: ${fullname} already exists`;
 
             await Employee.insert({
                 fullname,

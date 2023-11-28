@@ -18,6 +18,9 @@ export default class TaskServices {
             if (leadEmployeeId == 'select') throw 'Please select employee';
             if (projectId == 'select') throw 'Please select project';
 
+            if ((await Task.exists({ objective, farm_id: userInfo.farm_id })).found) throw `A task with the same objective already exists`;
+            if ((await Task.exists({ lead_employee_id: leadEmployeeId, progress: { $ne: 'done' } })).found) throw `Lead employee already working on a different task`;
+
             await Task.insert({
                 objective,
                 lead_employee_id: leadEmployeeId,

@@ -9,6 +9,7 @@ const ProjectManager_1 = __importDefault(require("../models/ProjectManager"));
 const Employee_1 = __importDefault(require("../models/Employee"));
 const Farm_1 = __importDefault(require("../models/Farm"));
 const Department_1 = __importDefault(require("../models/Department"));
+const Project_1 = __importDefault(require("../models/Project"));
 const Validation_1 = __importDefault(require("../helpers/Validation"));
 const Hasher_1 = __importDefault(require("../helpers/Hasher"));
 const Jwt_1 = __importDefault(require("../helpers/Jwt"));
@@ -80,6 +81,8 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
+            if (!(await Project_1.default.exists({ farm_id: userInfo.farm_id })).found)
+                throw 'No projects found';
             await ProjectManager_1.default.insert({
                 fullname,
                 email,
@@ -149,8 +152,10 @@ class UserServices {
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
-            if ((await Employee_1.default.exists({ email })).found)
+            if ((await Employee_1.default.exists({ email: email.trim().toLowerCase() })).found)
                 throw `Email address: ${email} already exists`;
+            if ((await Employee_1.default.exists({ fullname: fullname.trim().toLowerCase() })).found)
+                throw `Full name: ${fullname} already exists`;
             await Employee_1.default.insert({
                 fullname,
                 department: userInfo.department,
