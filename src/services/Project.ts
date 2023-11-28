@@ -7,18 +7,15 @@ import { IAny, IResponse } from "../interfaces";
 export default class ProjectServices {
     static async add (wrapRes: IResponse, body: IAny, { userInfo }: IAny) : Promise <IResponse> {
         try {
-            const { name, objective, department } = body;
+            const { name, objective } = body;
             
             v.validate({
                 'objective': { value: objective, min: 5, max: 136 }
             });
 
-			if (department == 'select') throw 'Please select department';
-
             await Project.insert({
                 farm_id: userInfo.farm_id,
 				name,
-				department,
 				objective
             })
 

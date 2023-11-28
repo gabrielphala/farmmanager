@@ -76,14 +76,19 @@ class UserServices {
     }
     static async addProjectManager(wrapRes, body, { userInfo }) {
         try {
-            const { fullname, email } = body;
+            const { fullname, email, project_id } = body;
             Validation_1.default.validate({
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
-            if (!(await Project_1.default.exists({ farm_id: userInfo.farm_id })).found)
-                throw 'No projects found';
+            if (project_id == 'select')
+                throw 'Please select a project';
+            if (!(await Project_1.default.exists({ id: project_id })).found)
+                throw 'Project not found';
+            if ((await ProjectManager_1.default.exists({ email })).found)
+                throw 'Email already in use';
             await ProjectManager_1.default.insert({
+                project_id,
                 fullname,
                 email,
                 farm_id: userInfo.farm_id,

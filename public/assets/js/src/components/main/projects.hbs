@@ -14,7 +14,6 @@
                 <li class="table__header__row__item short">#</li>
                 <li class="table__header__row__item">Project name</li>
                 <li class="table__header__row__item">Project objective</li>
-                <li class="table__header__row__item">Department</li>
                 <li class="table__header__row__item">Progress (status)</li>
                 <li class="table__header__row__item">Added on</li>
                 <li class="table__header__row__item">...</li>
@@ -26,7 +25,6 @@
                     <li class="table__body__row__item short">{{index}}</li>
                     <li class="table__body__row__item">{{this.name}}</li>
                     <li class="table__body__row__item">{{this.objective}}</li>
-                    <li class="table__body__row__item">{{this.department}}</li>
                     <li class="table__body__row__item">{{this.status}}</li>
                     <li class="table__body__row__item">{{datetime this.createdOn}}</li>
                     <li style="cursor: pointer;" class="table__body__row__item" {{ click "Project.viewGantt('<<this.id>>')" }}>view gantt chart</li>

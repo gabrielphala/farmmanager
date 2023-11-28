@@ -22,16 +22,6 @@
             <div class="input margin--top-1">
                 <input type="text" id="project-objective" placeholder="Objective">
             </div>
-			<div class="input margin--top-1">
-				<label class="input__label" for="project-department">Department</label>
-				<select name="" id="project-department">
-					<option value="select">Select</option>
-			
-					{{#each res.departments}}
-						<option value="{{this.name}}">{{this.name}}</option>
-					{{/each}}
-				</select>
-			</div>
         </div>
         <div class="card__footer">
             <button class="btn btn--primary">Add project</button>

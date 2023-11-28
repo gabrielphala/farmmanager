@@ -1,3 +1,5 @@
+{{~fetch '/projects/get/by/farm' | as 'res' }}
+
 <div class="modal modal--closed flex--a-start flex--j-center" id="new-project-manager-modal">
     <form class="modal__main card" {{submit "User.addProjectManager(event)"}}>
         <div class="card__header flex flex--a-center flex--j-space-between">
@@ -19,6 +21,17 @@
             </div>
             <div class="input margin--top-1">
                 <input type="email" id="user-email" placeholder="Email address">
+            </div>
+            <div class="input margin--top-1">
+                <p>Projects</p>
+                <select id="project">
+                    <option value="select">Select</option>
+                    {{#each res.projects}}
+                        <ul class="table__body__row flex">
+                            <option value="{{this.id}}">{{this.name}}</option>
+                        </ul>
+                    {{/each}}
+                </select>
             </div>
         </div>
         <div class="card__footer">

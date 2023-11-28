@@ -64,7 +64,8 @@ export default () => new (class User {
         const response = await fetch('/user/add/project-manager', {
             body: {
                 fullname: $('#user-full-name').val(),
-                email: $('#user-email').val()
+                email: $('#user-email').val(),
+                project_id: $('#project').val()
             }
         })
 

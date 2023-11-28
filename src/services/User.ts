@@ -88,16 +88,21 @@ export default class UserServices {
 
     static async addProjectManager (wrapRes: IResponse, body: IAny, { userInfo }: IAny): Promise<IResponse> {
         try {
-            const { fullname, email } = body;
+            const { fullname, email, project_id } = body;
 
             v.validate({
                 'full name': { value: fullname, min: 5, max: 60 },
                 'email address': { value: email, min: 5, max: 60 }
             });
 
-            if (!(await Project.exists({ farm_id: userInfo.farm_id })).found) throw 'No projects found'
+            if (project_id == 'select') throw 'Please select a project'
+
+            if (!(await Project.exists({ id: project_id })).found) throw 'Project not found'
+
+            if ((await ProjectManager.exists({email})).found) throw 'Email already in use';
 
             await ProjectManager.insert({
+                project_id,
                 fullname,
                 email,
                 farm_id: userInfo.farm_id,
