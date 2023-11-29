@@ -58,8 +58,8 @@ class TaskServices {
             task.finishedOn = sqlifier_1.SQLDate.toSQLDatetime(new Date());
             task.save();
             const project = await Project_1.default.findOne({ condition: { id: task.project_id } });
-            if (project.tasks_no == project.tasks_completed_no + 1) {
-                project.tasks_completed_no++;
+            project.tasks_completed_no++;
+            if (project.tasks_no == project.tasks_completed_no) {
                 project.status = 'done';
                 project.save();
             }

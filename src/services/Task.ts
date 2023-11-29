@@ -68,8 +68,9 @@ export default class TaskServices {
 
             const project = await Project.findOne({ condition: { id: task.project_id } });
 
-            if (project.tasks_no == project.tasks_completed_no + 1) {
-                project.tasks_completed_no++;
+            project.tasks_completed_no++;
+
+            if (project.tasks_no == project.tasks_completed_no) {
                 project.status = 'done';
 
                 project.save()
