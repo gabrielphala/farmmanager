@@ -1,4 +1,4 @@
-import { SQLifier } from "sqlifier"
+import { SQLifier, SQLDate } from "sqlifier"
 
 export default new (class Announcement extends SQLifier {
     constructor () {
@@ -11,7 +11,8 @@ export default new (class Announcement extends SQLifier {
             farm_id: { type: 'int', ref: 'Farm' },
             subject: { type: 'varchar', length: 255 },
             message: { type: 'varchar', length: 1024 },
-            isDeleted: { type: 'boolean', default: false }
+            isDeleted: { type: 'boolean', default: false },
+            createdOn: { type: 'datetime', default: SQLDate.now }
         })
     }
 })

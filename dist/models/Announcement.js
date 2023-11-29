@@ -11,7 +11,8 @@ exports.default = new (class Announcement extends sqlifier_1.SQLifier {
             farm_id: { type: 'int', ref: 'Farm' },
             subject: { type: 'varchar', length: 255 },
             message: { type: 'varchar', length: 1024 },
-            isDeleted: { type: 'boolean', default: false }
+            isDeleted: { type: 'boolean', default: false },
+            createdOn: { type: 'datetime', default: sqlifier_1.SQLDate.now }
         });
     }
 });
