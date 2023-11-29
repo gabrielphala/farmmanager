@@ -18,6 +18,14 @@ export default class AnnouncementServices {
                 'Subject': { value: message, min: 5, max: 255 }
             });
 
+            const projectManager = await ProjectManager.findOne({
+                condition: {
+                    farm_id: userInfo.farm_id
+                }
+            })
+
+            if (!projectManager) throw 'No project manager, cannot send announcement';
+
             await Announcement.insert({
                 sender_id: userInfo.id,
                 sender_type: userInfo.role,
